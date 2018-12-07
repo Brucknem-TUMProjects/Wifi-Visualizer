@@ -6,8 +6,38 @@
 
 import sys
 import subprocess
+from time import sleep
+from sense_hat import SenseHat
+from random import randint
+import requests
+
+
+#sense = SenseHat()
+#sense.clear()
+#sleep(10)
+
+# w, h = 8, 8;
+# matrix = [[0 for x in range(w)] for y in range(h)]
+# markers = []
+#
+# for i in range(100):
+#     for x in range(8):
+#         for y in range(8):
+#             r = randint(0,255)
+#             g = randint(0,255)
+#             b = randint(0,255)
+#             rgb = (r,g,b)
+# #            sense.set_pixel(x,y,rgb)
+#             matrix[x][y] = rgb
+#
+#     markers.append(matrix)
+#     print str(-i) + "db: " + str(markers[i]) + "\n"
+#     sleep(10)
+#
+# #sense.clear()
 
 interface = "wlan0"
+
 
 # You can add or change the functions to parse the properties of each AP (cell)
 # below. They take one argument, the bunch of text describing one cell in iwlist
@@ -26,7 +56,9 @@ def get_channel(cell):
 def get_signal_level(cell):
     # Signal level is on same line as Quality data so a bit of ugly
     # hacking needed...
-    return matching_line(cell,"Quality=").split("Signal level=")[1]
+    signal = matching_line(cell,"Quality=").split("Signal level=")[1]
+    return signal
+
 
 
 def get_encryption(cell):
@@ -51,11 +83,15 @@ def get_address(cell):
 # cell. The key will be the name of the column in the table. The value is a
 # function defined above.
 
+# rules={"Name":get_name,
+#        "Quality":get_quality,
+#        "Channel":get_channel,
+#        "Encryption":get_encryption,
+#        "Address":get_address,
+#        "Signal":get_signal_level
+#        }
+
 rules={"Name":get_name,
-       "Quality":get_quality,
-       "Channel":get_channel,
-       "Encryption":get_encryption,
-       "Address":get_address,
        "Signal":get_signal_level
        }
 
@@ -70,10 +106,8 @@ def sort_cells(cells):
 # You can choose which columns to display here, and most importantly in what order. Of
 # course, they must exist as keys in the dict rules.
 
-columns=["Name","Address","Quality","Signal", "Channel","Encryption"]
-
-
-
+#columns=["Name","Address","Quality","Signal", "Channel","Encryption"]
+columns=["Name","Signal"]
 
 # Below here goes the boring stuff. You shouldn't have to edit anything below
 # this point
@@ -114,7 +148,7 @@ def print_table(table):
         for i,el in enumerate(line):
             justified_line.append(el.ljust(widths[i]+2))
         justified_table.append(justified_line)
-    
+
     for line in justified_table:
         for el in line:
             print el,
@@ -130,13 +164,16 @@ def print_cells(cells):
     print_table(table)
 
 def main():
-    """Pretty prints the output of iwlist scan into a table"""
-    
-    cells=[[]]
+
+    cells= [[]]
     parsed_cells=[]
 
-    proc = subprocess.Popen(["iwlist", interface, "scan"],stdout=subprocess.PIPE, universal_newlines=True)
+    proc = subprocess.Popen(["sudo", "iwlist", interface, "scan"],stdout=subprocess.PIPE, universal_newlines=True)
     out, err = proc.communicate()
+    #print("-----------------------------------------------\n\n")
+    #print out
+    #print("\n\n-----------------------------------------------")
+
 
     for line in out.split("\n"):
         cell_line = match(line,"Cell ")
@@ -149,9 +186,6 @@ def main():
 
     for cell in cells:
         parsed_cells.append(parse_cell(cell))
-
+    return parsed_cells
     sort_cells(parsed_cells)
-
     print_cells(parsed_cells)
-
-main()
