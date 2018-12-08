@@ -7,33 +7,51 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Vuforia;
 
 public class DBPolling : MonoBehaviour
 {
     bool requested = false;
+    TrackableBehaviour trackable;
 
     private void Start()
     {
+        trackable = transform.GetComponent<TrackableBehaviour>();
         PiConnector.Instance.ConnectServer(true, "192.168.2.45", 5005);
-    }
-    private void Update()
-    {
-        if (!requested)
+
+        new Thread(RequestThread)
         {
-            StartCoroutine(Request());
+            IsBackground = true
+        }.Start();
+    }
+
+    void RequestThread()
+    {
+        while(true)
+        {
+            if (IsTracked && !requested)
+            {
+                string response = PiConnector.Instance.RequestServer();
+            }
         }
     }
 
-    private IEnumerator Request()
+    private void Update()
     {
-        requested = true;
-        PiConnector.Instance.RequestServer();
-        yield return new WaitForSeconds(5f);
-        requested = false;
+        
     }
 
     private void OnApplicationQuit()
     {
         PiConnector.Instance.CloseConnection();
+    }
+
+    private bool IsTracked
+    {
+        get
+        {
+            var status = trackable.CurrentStatus;
+            return status == TrackableBehaviour.Status.TRACKED;
+        }
     }
 }

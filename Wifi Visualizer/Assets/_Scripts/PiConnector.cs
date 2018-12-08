@@ -7,9 +7,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using UnityEngine.Playables;
 
-
-public class PiConnector
+public class PiConnector : PlayableBehaviour
 {
 
     private static PiConnector instance;
@@ -18,7 +18,12 @@ public class PiConnector
     public IPAddress serverIP = IPAddress.Loopback;
     public int threadsRunning = 0;
 
+    private bool useIp;
+    private string ip;
+    private int port;
+
     public bool isConnected = false;
+    private bool requesting = false;
 
     private PiConnector()
     {
@@ -41,6 +46,9 @@ public class PiConnector
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
 
+        this.useIp = useIp;
+        this.ip = ip;
+        this.port = port;
         ParameterizedThreadStart start = delegate { ConnectServerThread(useIp, ip, port); };
         Thread connectThread = new Thread(start);
         connectThread.Start();
@@ -79,6 +87,11 @@ public class PiConnector
         threadsRunning--;
     }
 
+    private void Reconnect()
+    {
+        ConnectServer(useIp, ip, port);
+    }
+
     /// <summary>
     /// <para>Possible server commands are: CreateUser, Login, UpdateUser. </para>
     /// <para>Possible request keywords are: Username, UserID, Password, Position, FriendsIDs.</para>
@@ -89,6 +102,10 @@ public class PiConnector
     /// <returns>A <see cref="System.String"/> containing the server response.</returns>
     public string RequestServer()
     {
+        Debug.Log("Started request!");
+        requesting = true;
+        string value;
+
         try
         {
             if (!SocketConnected)
@@ -105,17 +122,21 @@ public class PiConnector
             Array.Copy(receivedBuffer, data, rec);
 
             string response = Encoding.ASCII.GetString(data);
-            Debug.Log("Received: " + response);
 
             isConnected = true;
-            return response;
+            value = response;
         }
         catch (Exception)
         {
             isConnected = false;
-            Debug.Log("The server closed it's connection.");
-            return "Error in connection!";
+            Reconnect();
+            value = "Error in connection!";
         }
+
+        Debug.Log("Received: " + value);
+
+        requesting = false;
+        return value;
     }
 
     public bool SocketConnected
@@ -129,8 +150,7 @@ public class PiConnector
     public void CloseConnection(String message = "")
     {
         _clientSocket.Close();
-        _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+        
         Debug.Log("Connection closed: " + message);
         isConnected = false;
     }
