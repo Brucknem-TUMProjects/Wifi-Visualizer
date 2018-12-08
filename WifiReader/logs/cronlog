@@ -1,0 +1,13 @@
+Ending tcp.py
+Ending tcp.py
+Traceback (most recent call last):
+  File "tcp.py", line 50, in <module>
+    except Error:
+NameError: name 'Error' is not defined
+Traceback (most recent call last):
+  File "tcp.py", line 50, in <module>
+    except Error:
+NameError: name 'Error' is not defined
+Ending tcp.py
+Ending tcp.py
+Ending tcp.py
