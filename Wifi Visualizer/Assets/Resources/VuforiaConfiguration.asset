@@ -15,7 +15,7 @@ MonoBehaviour:
     vuforiaLicenseKey: AY529M//////AAABmVPMkqG09ktmuSvbsCYNajpcxeoeKZmxMUxcmkqgVa2ImToXFzlC8nYJOtrP1nX5wE34f7xBKef94hbcMBvH9DQ8tdLe+Vpw0CxaM0g02P6EOPhSluwLSAtv2PjlzVRcj8SZJTQahbyaKqqIa95H/8hBDMIht4W51c7DYlQTy0sZ/M1DL85ieuW3lDS94csdxL76dmfmREp1KaG+M+rhpDOWfyL0Vlbeb6/VjsUL/aDwvYq9/sRMysdnfYZ1T04xrQjeJb29V0vHNSrtRVLpLDPXeNKNwGhOjia+xjPxe5sXhVXTBHtXB3LTJ8TYl97nh0z99DdKcFO/Fht20u7SRIemI05LuKeeIhYCKAHMgXZm
     ufoLicenseKey: QVIzYnZxYi8vLy8vQUFBQUtNSmI0L3Q5UUUzWXFKc0Q5WTJONUIxR2JaSkZTdXBDQ1BaQndaQmlOL0hRUlkrOGdUNWQ0aC95WWlWNy9OeTlBOTNZTFp1MVhKVHBobVdFU0VuT0lldU1kcVB2c2tKUnRNNU5Ua3JJZ3dlRVFjditHR013QzcyWmhlVE1wbVhTRC9uZDhGZzNTSGE2MDd2REJtbm5kYXN1VG03QUN5K253dnVpTTNBT3VQVU1iVjlKNXQvb2RTVDlKV1o4VkFUR1BqZlpJdU5pYjR4bGMxbFp4MC85Z2Zpcmd2UHVJYW4xSWU5bEdjbHduTG5xOGpMQVlTMFQ5UkRMbnNiQUtMcW95bjc1d29IRUd3c0hPN3R4eS9kMmpMQWkxTTkra3k3eEFQTUszZmx0ZjJBQXJoM012Z0F3YXYrdmxvVmk2dmNSdjhwU2o2UTRmSExUVEEzUU5UVDdkMTdyT2lFaFI3Zy9DNVlkeERFbEErT0k=
     delayedInitialization: 0
-    cameraDeviceModeSetting: -1
+    cameraDeviceModeSetting: -3
     maxSimultaneousImageTargets: 1
     maxSimultaneousObjectTargets: 1
     useDelayedLoadingObjectTargets: 0
@@ -59,12 +59,12 @@ MonoBehaviour:
     modelCorrectionMode: 0
     modelTransformEnabled: 0
     modelTransform: {x: 0, y: 0.1, z: -0.1}
-    fusionMode: 7
+    fusionMode: 5
   smartTerrain:
     autoInitTracker: 0
     autoStartTracker: 0
   webcam:
-    deviceNameSetInEditor: 
+    deviceNameSetInEditor: Microsoft Camera Front
     flipHorizontally: 0
     turnOffWebCam: 0
     renderTextureLayer: 30

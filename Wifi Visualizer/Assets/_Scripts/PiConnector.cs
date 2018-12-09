@@ -9,22 +9,36 @@ using System.Text;
 using System.Threading;
 using UnityEngine.Playables;
 
-public class PiConnector : PlayableBehaviour
+public class PiConnector
 {
-
+    /** Singleton instance */
     private static PiConnector instance;
 
+    /** Pi server socket */
     private Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+    /** IP adress of pi */
     public IPAddress serverIP = IPAddress.Loopback;
+
+    /** Request counter */
     public int threadsRunning = 0;
 
-    private bool useIp;
-    private string ip;
+    /** Weather host is an IP adress or a hostname */
+    private bool isIp;
+
+    /** The adress of the host - IP or hostname */
+    private string host;
+
+    /** The port on which the host is listening */
     private int port;
 
+    /** Weather there is a currently a connection to the host */
     public bool isConnected = false;
+
+    /** Weather a request is currently running */
     private bool requesting = false;
 
+    /** Constructor */
     private PiConnector()
     {
         if (instance != null)
@@ -32,6 +46,7 @@ public class PiConnector : PlayableBehaviour
         instance = this;
     }
 
+    /** Singleton */
     public static PiConnector Instance
     {
         get
@@ -42,20 +57,30 @@ public class PiConnector : PlayableBehaviour
         }
     }
 
-    public void ConnectServer(bool useIp, string ip, int port)
+    /*
+     * Saves the server parameters and starts a thread to connect to server.
+     * 
+     * @param isIp Weather to interprete the host as an IP or a hostname
+     * @param host the name or IP of the host
+     * @param the port on which the server is listening
+     */
+    public void ConnectServer(bool isIp, string host, int port)
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
 
-        this.useIp = useIp;
-        this.ip = ip;
+        this.isIp = isIp;
+        this.host = host;
         this.port = port;
-        ParameterizedThreadStart start = delegate { ConnectServerThread(useIp, ip, port); };
+        ParameterizedThreadStart start = delegate { ConnectServerThread(isIp, host, port); };
         Thread connectThread = new Thread(start);
         connectThread.Start();
     }
 
-
-    private void ConnectServerThread(bool useIp, string host, int port)
+    /**
+     * Connection thread. 
+     * @see ConnectServer
+     */
+    private void ConnectServerThread(bool isIp, string host, int port)
     {
         if (threadsRunning > 10)
             return;
@@ -66,7 +91,7 @@ public class PiConnector : PlayableBehaviour
         try
         {
             Debug.Log("Connecting on " + host + ":" + port);
-            if (useIp)
+            if (isIp)
             {
                 _clientSocket.Connect(IPAddress.Parse(host), port);
             }
@@ -89,7 +114,7 @@ public class PiConnector : PlayableBehaviour
 
     private void Reconnect()
     {
-        ConnectServer(useIp, ip, port);
+        ConnectServer(isIp, host, port);
     }
 
     /// <summary>

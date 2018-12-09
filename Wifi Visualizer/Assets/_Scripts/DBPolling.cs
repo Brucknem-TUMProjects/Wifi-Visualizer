@@ -12,26 +12,38 @@ using Vuforia;
 public class DBPolling : MonoBehaviour
 {
     bool requested = false;
+    bool abort = false;
     TrackableBehaviour trackable;
+    Thread requestThread;
 
     private void Start()
     {
+        Debug.Log("Started DB Polling");
         trackable = transform.GetComponent<TrackableBehaviour>();
-        PiConnector.Instance.ConnectServer(true, "192.168.2.45", 5005);
+      //  PiConnector.Instance.ConnectServer(true, "192.168.2.45", 5005);
+        DatabaseConnector.Instance.ConnectDatabase("/Database/wifiAnalyzer.db");
+        DatabaseConnector.Instance.SelectFrom("*", "location", "", new Location());
 
-        new Thread(RequestThread)
+        requestThread = new Thread(RequestThread)
         {
             IsBackground = true
-        }.Start();
+        };
+        requestThread.Start();
     }
 
     void RequestThread()
     {
         while(true)
         {
+            if (abort)
+            {
+                return;
+            }
+
             if (IsTracked && !requested)
             {
-                string response = PiConnector.Instance.RequestServer();
+                DatabaseConnector.Instance.InsertInto("location",  0, 0,0,0,0,0,0);
+                // string response = PiConnector.Instance.RequestServer();
             }
         }
     }
@@ -43,7 +55,9 @@ public class DBPolling : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        abort = true;
         PiConnector.Instance.CloseConnection();
+        DatabaseConnector.Instance.CloseConnection();
     }
 
     private bool IsTracked
