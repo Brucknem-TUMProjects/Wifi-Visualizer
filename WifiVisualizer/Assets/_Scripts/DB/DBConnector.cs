@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DBConnector : IDBConnector
+public class DBConnector : DBConnectorMock
 {
     private SQLiteConnection dbconn;
-
+    
     public bool isConnected = false;
     public string file;
 
-    override
-    public void ConnectDatabase(string file)
+    
+    public new void ConnectDatabase(string file)
     {
         Debug.Log("Connect DB connection");
-
+        base.ConnectDatabase(file);
         dbconn = new SQLiteConnection(Application.dataPath + file);
         dbconn.CreateTable<Location>();
         dbconn.CreateTable<Signal>();
     }
 
-    override
-    public void AddLocation(Location location)
+    
+    public void WriteLocation(Location location)
     {
         try
         {
@@ -33,7 +33,15 @@ public class DBConnector : IDBConnector
         }
     }
 
-    override
+    public void WriteLocations(List<Location> locations)
+    {
+        foreach(Location location in locations)
+        {
+            WriteLocation(location);
+        }
+    }
+
+    
     public List<Location> QueryLocations(long timestamp = -1)
     {
         Debug.Log("LOCATIONS returned");
@@ -45,7 +53,7 @@ public class DBConnector : IDBConnector
         return dbconn.Query<Location>(query);
     }
 
-    public override void AddSignal(Signal signal)
+    public  void WriteSignal(Signal signal)
     {
         try
         {
@@ -58,15 +66,15 @@ public class DBConnector : IDBConnector
         }
     }
 
-    public override void AddSignals(List<Signal> signals)
+    public  void WriteSignals(List<Signal> signals)
     {
         foreach (Signal signal in signals)
         {
-            AddSignal(signal);
+            WriteSignal(signal);
         }
     }
 
-    public override List<Signal> QuerySignals(long timestamp = -1)
+    public List<Signal> QuerySignals(long timestamp = -1)
     {
         Debug.Log("SIGNALS returned");
 
@@ -78,17 +86,18 @@ public class DBConnector : IDBConnector
         return dbconn.Query<Signal>(query);
     }
 
-    public override void CloseConnection()
+    public new void CloseConnection()
     {
+        WriteLocations(locations);
+        WriteSignals(signals);
         dbconn.Close();
         Debug.Log("Closed database connection");
     }
 
-    public override void ClearTables()
+    public new void ClearTables()
     {
-        List<Location> locations = dbconn.Query<Location>("DELETE FROM Location");
-        List<Signal> signals = dbconn.Query<Signal>("DELETE FROM Signal");
-        Debug.Log("LOCATIONS: " + locations.Count);
-        Debug.Log("SIGNALS: " + signals.Count);
+        base.ClearTables();
+        dbconn.Query<Location>("DELETE FROM Location");
+        dbconn.Query<Signal>("DELETE FROM Signal");
     }
 }

@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class DBPolling : MonoBehaviour
 {
     private readonly IPiConnector pi = new PiConnector();
-    private readonly IDBConnector database = new DBConnector();
+    private readonly DBConnector database = new DBConnector();
 
     public Text locationsView;
     public Text signalsView;
@@ -63,7 +63,7 @@ public class DBPolling : MonoBehaviour
             }
 
             Debug.Log("----------------- SLEEEEPING ----------------------");
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
         }
     }
 
@@ -140,12 +140,6 @@ public class DBPolling : MonoBehaviour
     private void OnApplicationQuit()
     {
         abort = true;
-        List<Location> locations = database.QueryLocations();
-        List<Signal> signals = database.QuerySignals();
-
-        Debug.Log("LOCATIONS: " + locations.Count);
-        Debug.Log("SIGNALS: " + signals.Count);
-
 
         pi.CloseConnection();
         database.CloseConnection();
