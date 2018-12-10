@@ -2,7 +2,7 @@
 import signal
 import sys
 import socket
-import wifiReader
+import wifiCapture
 from sense_hat import SenseHat
 from time import sleep
 
@@ -61,7 +61,7 @@ while 1:
 		sense.clear()
 		data = conn.recv(BUFFER_SIZE)
 		sense.show_letter("X")
-		datatcp = wifiReader.main()
+		datatcp = wifiCapture.main()
 		if not data:
 			break
 		print datatcp

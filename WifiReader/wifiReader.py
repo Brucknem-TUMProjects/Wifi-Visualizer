@@ -7,34 +7,8 @@
 import sys
 import subprocess
 from time import sleep
-from sense_hat import SenseHat
 from random import randint
 import requests
-
-
-#sense = SenseHat()
-#sense.clear()
-#sleep(10)
-
-# w, h = 8, 8;
-# matrix = [[0 for x in range(w)] for y in range(h)]
-# markers = []
-#
-# for i in range(100):
-#     for x in range(8):
-#         for y in range(8):
-#             r = randint(0,255)
-#             g = randint(0,255)
-#             b = randint(0,255)
-#             rgb = (r,g,b)
-# #            sense.set_pixel(x,y,rgb)
-#             matrix[x][y] = rgb
-#
-#     markers.append(matrix)
-#     print str(-i) + "db: " + str(markers[i]) + "\n"
-#     sleep(10)
-#
-# #sense.clear()
 
 interface = "wlan0"
 
@@ -91,8 +65,10 @@ def get_address(cell):
 #        "Signal":get_signal_level
 #        }
 
-rules={"Name":get_name,
-       "Signal":get_signal_level
+rules={
+    "Name":get_name,
+    "Address":get_address,
+    "Signal":get_signal_level
        }
 
 # Here you can choose the way of sorting the table. sortby should be a key of
