@@ -1,12 +1,6 @@
-﻿using Mono.Data.Sqlite;
-using System.Data;
-using System;
-using System.Collections;
+﻿using SQLite4Unity3d;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Reflection;
-using UnityEditor;
-using SQLite4Unity3d;
 
 public class DBConnector : IDBConnector
 {
@@ -23,8 +17,6 @@ public class DBConnector : IDBConnector
         dbconn = new SQLiteConnection(Application.dataPath + file);
         dbconn.CreateTable<Location>();
         dbconn.CreateTable<Signal>();
-
-        ClearTables();
     }
 
     override

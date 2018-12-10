@@ -10,20 +10,20 @@ public class Location : IComparable<Location>
     [PrimaryKey]
     public long Timestamp { get; set; }
 
-    public double PosX { get; set; }
-    public double PosY { get; set; }
-    public double PosZ { get; set; }
+    public float PosX { get; set; }
+    public float PosY { get; set; }
+    public float PosZ { get; set; }
 
-    public double RotX { get; set; }
-    public double RotY { get; set; }
-    public double RotZ { get; set; }
+    public float RotX { get; set; }
+    public float RotY { get; set; }
+    public float RotZ { get; set; }
 
     public Location() : this(0, 0, 0, 0, 0, 0, 0)
     {
 
     }
 
-    public Location(long Timestamp, double PosX, double PosY, double PosZ, double RotX, double RotY, double RotZ)
+    public Location(long Timestamp, float PosX, float PosY, float PosZ, float RotX, float RotY, float RotZ)
     {
         this.Timestamp = Timestamp;
 

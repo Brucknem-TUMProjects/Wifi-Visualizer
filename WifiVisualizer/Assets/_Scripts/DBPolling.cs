@@ -35,6 +35,7 @@ public class DBPolling : MonoBehaviour
 
         pi.ConnectServer(true, "192.168.2.45", 5005);
         database.ConnectDatabase("/Database/database.db");
+        database.ClearTables();
 
         requestThread = new Thread(RequestThread)
         {
@@ -139,6 +140,13 @@ public class DBPolling : MonoBehaviour
     private void OnApplicationQuit()
     {
         abort = true;
+        List<Location> locations = database.QueryLocations();
+        List<Signal> signals = database.QuerySignals();
+
+        Debug.Log("LOCATIONS: " + locations.Count);
+        Debug.Log("SIGNALS: " + signals.Count);
+
+
         pi.CloseConnection();
         database.CloseConnection();
     }
