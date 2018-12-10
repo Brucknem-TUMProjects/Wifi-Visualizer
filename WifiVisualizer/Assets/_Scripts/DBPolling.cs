@@ -8,21 +8,33 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Vuforia;
+using UnityEditor;
+using UnityEngine.UI;
 
 public class DBPolling : MonoBehaviour
 {
-    bool requested = false;
+    private readonly IPiConnector pi = new PiConnector();
+    private readonly IDBConnector database = new DBConnector();
+
+    public Text locationsView;
+    public Text signalsView;
+
     bool abort = false;
+
     TrackableBehaviour trackable;
     Thread requestThread;
+
+    Queue<long> timestampQueue = new Queue<long>();
+    Queue<List<Signal>> signalsQueue = new Queue<List<Signal>>();
+    Queue<KeyValuePair<long, Transform>> transformQueue = new Queue<KeyValuePair<long, Transform>>();
 
     private void Start()
     {
         Debug.Log("Started DB Polling");
         trackable = transform.GetComponent<TrackableBehaviour>();
-      //  PiConnector.Instance.ConnectServer(true, "192.168.2.45", 5005);
-        DatabaseConnector.Instance.ConnectDatabase("/Database/wifiAnalyzer.db");
-        DatabaseConnector.Instance.SelectFrom("*", "location", "", new Location());
+
+        pi.ConnectServer(true, "192.168.2.45", 5005);
+        database.ConnectDatabase("/Database/database.db");
 
         requestThread = new Thread(RequestThread)
         {
@@ -33,31 +45,102 @@ public class DBPolling : MonoBehaviour
 
     void RequestThread()
     {
-        while(true)
+        while (true)
         {
             if (abort)
             {
                 return;
             }
 
-            if (IsTracked && !requested)
+            if (IsTracked)
             {
-                DatabaseConnector.Instance.InsertInto("location",  0, 0,0,0,0,0,0);
-                // string response = PiConnector.Instance.RequestServer();
+                long timestamp = Environment.TickCount;
+                List<Signal> signals = pi.RequestServer(timestamp);
+
+                signalsQueue.Enqueue(signals);
+                timestampQueue.Enqueue(timestamp);
+            }
+
+            Debug.Log("----------------- SLEEEEPING ----------------------");
+            Thread.Sleep(1000);
+        }
+    }
+
+    private void AddLocation(long timestamp)
+    {
+        KeyValuePair<long, Transform> first;
+        KeyValuePair<long, Transform> second = transformQueue.Dequeue();
+        KeyValuePair<long, Transform> nearest = new KeyValuePair<long, Transform>(-1, null);
+
+        while (transformQueue.Count > 0)
+        {
+            first = second;
+            second = transformQueue.Dequeue();
+
+            if (first.Key <= timestamp && second.Key >= timestamp)
+            {
+                if (timestamp - first.Key < second.Key - timestamp)
+                {
+                    nearest = first;
+                }
+                else
+                {
+                    nearest = second;
+                }
+                break;
             }
         }
+        if(nearest.Key == -1)
+        {
+            nearest = second;
+        }
+        Transform correctedTransform = nearest.Value;
+        Location location = new Location(timestamp, correctedTransform.position.x, correctedTransform.position.y, correctedTransform.position.z, correctedTransform.rotation.x, correctedTransform.rotation.y, correctedTransform.rotation.z);
+        database.AddLocation(location);
+    }
+
+    private void AddSignals(List<Signal> signals)
+    {
+        database.AddSignals(signals);
     }
 
     private void Update()
     {
-        
+        transformQueue.Enqueue(new KeyValuePair<long, Transform>(Environment.TickCount, transform));
+
+        if (timestampQueue.Count > 0)
+        {
+            long timestamp = timestampQueue.Dequeue();
+            AddLocation(timestamp);
+            AddSignals(signalsQueue.Dequeue());
+
+            UpdateUI();
+        }
+    }
+
+    private void UpdateUI()
+    {
+        List<Location> locations = database.QueryLocations();
+        List<Signal> signals = database.QuerySignals();
+
+        locationsView.text = "";
+        signalsView.text = "";
+
+        foreach (Location location in locations)
+        {
+            locationsView.text += location.ToString();
+        }
+        foreach (Signal signal in signals)
+        {
+            signalsView.text += signal.ToString();
+        }
     }
 
     private void OnApplicationQuit()
     {
         abort = true;
-        PiConnector.Instance.CloseConnection();
-        DatabaseConnector.Instance.CloseConnection();
+        pi.CloseConnection();
+        database.CloseConnection();
     }
 
     private bool IsTracked

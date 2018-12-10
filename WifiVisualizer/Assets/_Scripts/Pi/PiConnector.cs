@@ -9,11 +9,8 @@ using System.Text;
 using System.Threading;
 using UnityEngine.Playables;
 
-public class PiConnector
+public class PiConnector : IPiConnector
 {
-    /** Singleton instance */
-    private static PiConnector instance;
-
     /** Pi server socket */
     private Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -34,29 +31,7 @@ public class PiConnector
 
     /** Weather there is a currently a connection to the host */
     public bool isConnected = false;
-
-    /** Weather a request is currently running */
-    private bool requesting = false;
-
-    /** Constructor */
-    private PiConnector()
-    {
-        if (instance != null)
-            return;
-        instance = this;
-    }
-
-    /** Singleton */
-    public static PiConnector Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new PiConnector();
-            return instance;
-        }
-    }
-
+        
     /*
      * Saves the server parameters and starts a thread to connect to server.
      * 
@@ -64,7 +39,8 @@ public class PiConnector
      * @param host the name or IP of the host
      * @param the port on which the server is listening
      */
-    public void ConnectServer(bool isIp, string host, int port)
+    override
+   public void ConnectServer(bool isIp, string host, int port)
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
 
@@ -125,11 +101,11 @@ public class PiConnector
     /// </summary>
     /// <param name="message">The message sent to the server.</param>
     /// <returns>A <see cref="System.String"/> containing the server response.</returns>
-    public string RequestServer()
+    override
+    public List<Signal> RequestServer(long timestamp)
     {
         Debug.Log("Started request!");
-        requesting = true;
-        string value;
+        string response = "";
 
         try
         {
@@ -146,22 +122,20 @@ public class PiConnector
 
             Array.Copy(receivedBuffer, data, rec);
 
-            string response = Encoding.ASCII.GetString(data);
+            response = Encoding.ASCII.GetString(data);
 
             isConnected = true;
-            value = response;
         }
         catch (Exception)
         {
             isConnected = false;
             Reconnect();
-            value = "Error in connection!";
+            Debug.Log("Error in request!");
         }
 
-        Debug.Log("Received: " + value);
+        Debug.Log("Received: " + response);
 
-        requesting = false;
-        return value;
+        return ParseResponse(timestamp, response);
     }
 
     public bool SocketConnected
@@ -172,10 +146,11 @@ public class PiConnector
         }
     }
 
-    public void CloseConnection(String message = "")
+    override
+    public void CloseConnection(string message = "")
     {
         _clientSocket.Close();
-        
+
         Debug.Log("Connection closed: " + message);
         isConnected = false;
     }

@@ -1,0 +1,3 @@
+[submodule "WifiVisualizer/Assets/Plugins/SQLite4Unity3d"]
+	path = WifiVisualizer/Assets/Plugins/SQLite4Unity3d
+	url = git@github.com:robertohuertasm/SQLite4Unity3d.git
