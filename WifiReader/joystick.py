@@ -16,7 +16,7 @@ def signal_handler(sig, frame):
     print('\nEnding joystick.py')
     if process is not None:
         process.send_signal(signal.SIGINT)
-    sense.show_message('Starting joystick script', scroll_speed=0.05)
+    sense.show_message('Ending joystick script', scroll_speed=0.05)
     sense.clear()
     sys.exit(0)
 signal.signal(signal.SIGINT, signal_handler)
