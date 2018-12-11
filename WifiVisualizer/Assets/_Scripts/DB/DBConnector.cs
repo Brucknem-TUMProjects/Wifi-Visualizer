@@ -1,103 +1,115 @@
 ﻿using SQLite4Unity3d;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
-public class DBConnector : DBConnectorMock
+public class DBConnector
 {
     private SQLiteConnection dbconn;
-    
+    private List<Location> locations;
+    private List<Signal> signals;
+
     public bool isConnected = false;
     public string file;
-
-    
-    public new void ConnectDatabase(string file)
+        
+    public void ConnectDatabase(string file)
     {
         Debug.Log("Connect DB connection");
-        base.ConnectDatabase(file);
+        Reset();
         dbconn = new SQLiteConnection(Application.dataPath + file);
-        dbconn.CreateTable<Location>();
-        dbconn.CreateTable<Signal>();
     }
 
-    
-    public void WriteLocation(Location location)
+    public void Reset()
     {
-        try
-        {
-            dbconn.Insert(location);
-            Debug.Log("LOCATION added " + location);
-        }
-        catch (SQLiteException)
-        {
-            Debug.LogError("Location already in database: " + location);
-        }
+        locations = new List<Location>();
+        signals = new List<Signal>();
     }
 
-    public void WriteLocations(List<Location> locations)
+    public void Add(SQLable value)
     {
-        foreach(Location location in locations)
+        if (value.GetType() == typeof(Location))
         {
-            WriteLocation(location);
+            locations.Add((Location) value);
+        }
+        else if (value.GetType() == typeof(Signal))
+        {
+            signals.Add((Signal) value);
         }
     }
 
-    
-    public List<Location> QueryLocations(long timestamp = -1)
+    public void AddAll(List<SQLable> values)
     {
-        Debug.Log("LOCATIONS returned");
-        string query = "SELECT * FROM Location";
+        foreach (SQLable value in values)
+        {
+            Add(value);
+        }
+    }
+
+    public List<Location> GetLocations()
+    {
+        return locations;
+    }
+
+    public List<Signal> GetSignals()
+    {
+        return signals;
+    }
+
+    private void Write<T>(T value) where T : SQLable, new()
+    {
+        Write(new List<T>() { value });
+    }
+
+    private void Write<T>(List<T> values) where T : SQLable, new()
+    {
+        if (values.Count <= 0)
+        {
+            return;
+        }
+
+        dbconn.CreateTable<T>();
+        string query = "INSERT INTO " + values[0].GetType().ToString() + " VALUES\n";
+
+        foreach (T value in values)
+        {
+            query += value.ToSqlValueList() + ",\n";
+        }
+
+        query = query.Substring(0, query.Length - 2);
+        Debug.Log(query);
+        dbconn.Query<T>(query);
+    }
+
+    public List<T> Select<T>(long timestamp = -1) where T : SQLable, new()
+    {
+        string name = typeof(T).ToString();
+        
+        string query = "SELECT * FROM " + name;
+
         if (timestamp != -1)
         {
-            return dbconn.Query<Location>(query + " WHERE timestamp = ?", timestamp);
+            query += " WHERE timestamp = " + timestamp;
         }
-        return dbconn.Query<Location>(query);
+        List<T> result = dbconn.Query<T>(query);
+        Debug.Log(result.Count + " " + name.ToUpper() + "S returned");
+        return result;
     }
 
-    public  void WriteSignal(Signal signal)
+    public void ClearTables()
     {
-        try
-        {
-            dbconn.Insert(signal);
-            Debug.Log("SIGNAL added " + signal);
-        }
-        catch (SQLiteException)
-        {
-            Debug.LogError("Signal already in database: " + signal);
-        }
-    }
-
-    public  void WriteSignals(List<Signal> signals)
-    {
-        foreach (Signal signal in signals)
-        {
-            WriteSignal(signal);
-        }
-    }
-
-    public List<Signal> QuerySignals(long timestamp = -1)
-    {
-        Debug.Log("SIGNALS returned");
-
-        string query = "SELECT * FROM Signal";
-        if (timestamp != -1)
-        {
-            return dbconn.Query<Signal>(query + " WHERE timestamp = ?", timestamp);
-        }
-        return dbconn.Query<Signal>(query);
-    }
-
-    public new void CloseConnection()
-    {
-        WriteLocations(locations);
-        WriteSignals(signals);
-        dbconn.Close();
-        Debug.Log("Closed database connection");
-    }
-
-    public new void ClearTables()
-    {
-        base.ClearTables();
         dbconn.Query<Location>("DELETE FROM Location");
         dbconn.Query<Signal>("DELETE FROM Signal");
+    }
+
+    public void CloseConnection()
+    {
+        Write(locations);
+        Write(signals);
+
+        Select<Location>();
+        Select<Signal>();
+
+        dbconn.Close();
     }
 }

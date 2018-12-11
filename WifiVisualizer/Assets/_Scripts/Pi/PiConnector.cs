@@ -102,7 +102,7 @@ public class PiConnector : IPiConnector
     /// <param name="message">The message sent to the server.</param>
     /// <returns>A <see cref="System.String"/> containing the server response.</returns>
     override
-    public List<Signal> RequestServer(long timestamp)
+    public Signal RequestServer(long timestamp)
     {
         Debug.Log("Started request!");
         string response = "";

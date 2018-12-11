@@ -4,12 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Signal : IComparable<Signal>
+public class Signal : SQLable, IComparable<Signal>
 {
-
-    [PrimaryKey]
-    public long Timestamp { get; set; }
-
     public string Mac { get; set; }
     public string Name { get; set; }
     public int Decibel { get; set; } 

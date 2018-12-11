@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 public class DBPolling : MonoBehaviour
 {
-    private readonly IPiConnector pi = new PiConnector();
+    private readonly IPiConnector pi = new PiConnectorMock();
     private readonly DBConnector database = new DBConnector();
 
     public Text locationsView;
@@ -25,18 +25,18 @@ public class DBPolling : MonoBehaviour
     Thread requestThread;
 
     Queue<long> timestampQueue = new Queue<long>();
-    Queue<List<Signal>> signalsQueue = new Queue<List<Signal>>();
+    Queue<Signal> signalsQueue = new Queue<Signal>();
     Queue<KeyValuePair<long, Transform>> transformQueue = new Queue<KeyValuePair<long, Transform>>();
 
     private void Start()
     {
         Debug.Log("Started DB Polling");
         trackable = transform.GetComponent<TrackableBehaviour>();
-
+        
         pi.ConnectServer(true, "192.168.2.45", 5005);
         database.ConnectDatabase("/Database/database.db");
         database.ClearTables();
-
+        
         requestThread = new Thread(RequestThread)
         {
             IsBackground = true
@@ -56,9 +56,9 @@ public class DBPolling : MonoBehaviour
             if (IsTracked)
             {
                 long timestamp = Environment.TickCount;
-                List<Signal> signals = pi.RequestServer(timestamp);
+                Signal signal = pi.RequestServer(timestamp);
 
-                signalsQueue.Enqueue(signals);
+                signalsQueue.Enqueue(signal);
                 timestampQueue.Enqueue(timestamp);
             }
 
@@ -96,13 +96,19 @@ public class DBPolling : MonoBehaviour
             nearest = second;
         }
         Transform correctedTransform = nearest.Value;
-        Location location = new Location(timestamp, correctedTransform.position.x, correctedTransform.position.y, correctedTransform.position.z, correctedTransform.rotation.x, correctedTransform.rotation.y, correctedTransform.rotation.z);
-        database.AddLocation(location);
+        Location location = new Location(timestamp, 
+            correctedTransform.position.x, 
+            correctedTransform.position.y, 
+            correctedTransform.position.z, 
+            correctedTransform.rotation.eulerAngles.x, 
+            correctedTransform.rotation.eulerAngles.y, 
+            correctedTransform.rotation.eulerAngles.z);
+        database.Add(location);
     }
 
-    private void AddSignals(List<Signal> signals)
+    private void AddSignal(Signal signals)
     {
-        database.AddSignals(signals);
+        database.Add(signals);
     }
 
     private void Update()
@@ -113,16 +119,16 @@ public class DBPolling : MonoBehaviour
         {
             long timestamp = timestampQueue.Dequeue();
             AddLocation(timestamp);
-            AddSignals(signalsQueue.Dequeue());
+            AddSignal(signalsQueue.Dequeue());
 
-            UpdateUI();
+        //    UpdateUI();
         }
     }
 
     private void UpdateUI()
     {
-        List<Location> locations = database.QueryLocations();
-        List<Signal> signals = database.QuerySignals();
+        List<Location> locations = database.Select<Location>();
+        List<Signal> signals = database.Select<Signal>();
 
         locationsView.text = "";
         signalsView.text = "";

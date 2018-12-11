@@ -5,10 +5,10 @@ using UnityEngine;
 public abstract class IPiConnector
 {
     public abstract void ConnectServer(bool isIp, string host, int port);
-    public abstract List<Signal> RequestServer(long timestamp);
+    public abstract Signal RequestServer(long timestamp);
     public abstract void CloseConnection(string message = "");
 
-    public List<Signal> ParseResponse(long timestamp, string response)
+    public Signal ParseResponse(long timestamp, string response)
     {
         List<Signal> parsed = new List<Signal>();
         string[] rawSignals = response.Split('|');
@@ -16,9 +16,10 @@ public abstract class IPiConnector
         {
             string[] values = rawSignal.Split(';');
             Signal signal = new Signal(timestamp, values[0], values[1], -1 * int.Parse(values[2]));
-            parsed.Add(signal);
+            return signal;
+           // parsed.Add(signal);
         }
 
-        return parsed;
+        return null;
     }
 }

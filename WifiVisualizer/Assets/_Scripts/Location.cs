@@ -2,14 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
-public class Location : IComparable<Location>
+public class Location : SQLable, IComparable<Location>
 {
-
-    [PrimaryKey]
-    public long Timestamp { get; set; }
-
     public float PosX { get; set; }
     public float PosY { get; set; }
     public float PosZ { get; set; }
@@ -36,12 +33,12 @@ public class Location : IComparable<Location>
         this.RotZ = RotZ;
     }
 
-    override
-    public string ToString()
+    
+    public override string ToString()
     {
         return Timestamp + ": Pos => [" + PosX + "," + PosY + "," + PosZ + "] Rot => [" + RotX + "," + RotY + "," + RotZ + "]";
     }
-
+   
     public int CompareTo(Location other)
     {
         return (int)(Timestamp - other.Timestamp);

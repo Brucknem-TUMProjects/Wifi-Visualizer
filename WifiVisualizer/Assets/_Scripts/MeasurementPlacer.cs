@@ -10,8 +10,10 @@ public class MeasurementPlacer : MonoBehaviour {
 	void Start () {
         database.ConnectDatabase("/Database/database.db");
 
-        List<Location> locations = database.QueryLocations();
-        List<Signal> signals = database.QuerySignals();
+        List<Location> locations = database.Select<Location>();
+        List<Signal> signals = database.Select<Signal>();
+
+        Debug.Log(locations + "" +signals);
 
         for(int i = 0; i < locations.Count; i++)
         {

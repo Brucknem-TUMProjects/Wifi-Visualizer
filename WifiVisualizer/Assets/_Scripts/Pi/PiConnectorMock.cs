@@ -16,7 +16,7 @@ public class PiConnectorMock : IPiConnector
     }
 
     override
-    public List<Signal> RequestServer(long timestamp)
+    public Signal RequestServer(long timestamp)
     {
             string response = "88:88:88:88:88:88;FritzBox! TC7590;50";
             return ParseResponse(timestamp, response);
