@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public abstract class SQLable
+public class SQLable
 {
     [PrimaryKey]
     public long Timestamp { get; set; }

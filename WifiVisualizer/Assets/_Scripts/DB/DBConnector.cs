@@ -4,58 +4,16 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class DBConnector
+public class DBConnector : IDBConnector
 {
     private SQLiteConnection dbconn;
-    private List<Location> locations;
-    private List<Signal> signals;
-
-    public bool isConnected = false;
-    public string file;
-        
-    public void ConnectDatabase(string file)
+            
+    public override void ConnectDatabase(string file)
     {
-        Debug.Log("Connect DB connection");
-        Reset();
+        base.ConnectDatabase(file);
         dbconn = new SQLiteConnection(Application.dataPath + file);
-    }
-
-    public void Reset()
-    {
-        locations = new List<Location>();
-        signals = new List<Signal>();
-    }
-
-    public void Add(SQLable value)
-    {
-        if (value.GetType() == typeof(Location))
-        {
-            locations.Add((Location) value);
-        }
-        else if (value.GetType() == typeof(Signal))
-        {
-            signals.Add((Signal) value);
-        }
-    }
-
-    public void AddAll(List<SQLable> values)
-    {
-        foreach (SQLable value in values)
-        {
-            Add(value);
-        }
-    }
-
-    public List<Location> GetLocations()
-    {
-        return locations;
-    }
-
-    public List<Signal> GetSignals()
-    {
-        return signals;
-    }
-
+    } 
+    
     private void Write<T>(T value) where T : SQLable, new()
     {
         Write(new List<T>() { value });
@@ -81,7 +39,7 @@ public class DBConnector
         dbconn.Query<T>(query);
     }
 
-    public List<T> Select<T>(long timestamp = -1) where T : SQLable, new()
+    public override List<T> Select<T>(long timestamp = -1)
     {
         string name = typeof(T).ToString();
         
@@ -96,19 +54,18 @@ public class DBConnector
         return result;
     }
 
-    public void ClearTables()
+    public override void ClearTables()
     {
-        dbconn.Query<Location>("DELETE FROM Location");
-        dbconn.Query<Signal>("DELETE FROM Signal");
+        base.ClearTables();
+        dbconn.DropTable<Location>();
+        dbconn.DropTable<Signal>();
     }
 
-    public void CloseConnection()
+    public override void CloseConnection()
     {
+        base.CloseConnection();
         Write(locations);
         Write(signals);
-
-        Select<Location>();
-        Select<Signal>();
 
         dbconn.Close();
     }
