@@ -19,20 +19,22 @@ public class SQLable
         FieldInfo[] fields = GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance |
                          BindingFlags.DeclaredOnly);
-        string valueList = "(" + Timestamp;
+        string valueList = "(";
 
         foreach (FieldInfo field in fields)
         {
             if (field.FieldType == typeof(System.String))
             {
-                valueList += ", '" + field.GetValue(this) + "'";
+                valueList += "'" + field.GetValue(this) + "'";
             }
             else
             {
-                valueList += ", " + field.GetValue(this);
+                valueList += field.GetValue(this);
             }
+
+            valueList += ", ";
         }
 
-        return valueList + ")";
+        return valueList + Timestamp + ")";
     }
 }

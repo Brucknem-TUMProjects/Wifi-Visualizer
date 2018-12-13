@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 public class DBPolling : MonoBehaviour
 {
-    private readonly IPiConnector pi = new PiConnectorMock();
+    private readonly IPiConnector pi = new PiConnector();
     private readonly IDBConnector database = new DBConnector();
 
     public Text locationsView;
