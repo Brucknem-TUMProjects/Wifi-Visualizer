@@ -10,6 +10,13 @@ using UnityEngine.UI;
 public class TCP : MonoBehaviour
 {
     public Image background;
+    public int Port
+    {
+        get
+        {
+            return 5005;
+        }
+    }
 
     private void Start()
     {
@@ -23,7 +30,7 @@ public class TCP : MonoBehaviour
     private void SetupServer()
     {
         Console.WriteLine("Setting up server...");
-        _serverSocker.Bind(new IPEndPoint(IPAddress.Any, 100));
+        _serverSocker.Bind(new IPEndPoint(IPAddress.Any, Port));
         _serverSocker.Listen(1);
         _serverSocker.BeginAccept(new AsyncCallback(AcceptCallback), null);
     }
