@@ -33,7 +33,7 @@ public class DBPolling : MonoBehaviour
         Debug.Log("Started DB Polling");
         trackable = transform.GetComponent<TrackableBehaviour>();
         
-        pi.ConnectServer(true, "192.168.2.45", 5005);
+        pi.ConnectServer(true, "192.168.2.23", 5005);
         database.ConnectDatabase("/Database/database.db");
         database.ClearTables();
         
