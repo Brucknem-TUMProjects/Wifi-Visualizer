@@ -22,7 +22,7 @@ public class Handy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        text.text = GetNetworkMAC() + ";" + GetNetworkSSID() + ";" + GetNetworkDBM();
     }
 
     public void OnSetButton()
@@ -73,5 +73,40 @@ public class Handy : MonoBehaviour
             }
         }
         return success;
+    }
+
+    private AndroidJavaObject GetWifiInfo()
+    {
+        using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
+        {
+            using (var wifiManager = activity.Call<AndroidJavaObject>("getSystemService", "wifi"))
+            {
+                return wifiManager.Call<AndroidJavaObject>("getConnectionInfo");
+            }
+        }
+    }
+
+    public int GetNetworkDBM()
+    {
+        using (var wifiInfo = GetWifiInfo())
+        {
+            return wifiInfo.Call<int>("getRssi");
+        }
+    }
+
+    public string GetNetworkSSID()
+    {
+        using (var wifiInfo = GetWifiInfo())
+        {
+            return wifiInfo.Call<string>("getSSID");
+        }
+    }
+
+    public string GetNetworkMAC()
+    {
+        using (var wifiInfo = GetWifiInfo())
+        {
+            return wifiInfo.Call<string>("getBSSID");
+        }
     }
 }
