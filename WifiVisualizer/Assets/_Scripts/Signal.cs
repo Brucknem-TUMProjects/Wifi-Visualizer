@@ -7,7 +7,7 @@ using UnityEngine;
 public class Signal : SQLable, IComparable<Signal>
 {
     public string Mac { get; set; }
-    public string Name { get; set; }
+    public string Ssid { get; set; }
     public int Decibel { get; set; } 
 
     public Signal() : this(0, "", "", 0)
@@ -24,13 +24,13 @@ public class Signal : SQLable, IComparable<Signal>
     {
         this.Timestamp = Timestamp;
         this.Mac = Mac;
-        this.Name = Name;
+        this.Ssid = Name;
         this.Decibel = Decibel;
     }
 
     public override string ToString()
     {
-        return Timestamp + ": " + Mac + "; " + Name + "; " + Decibel;
+        return Timestamp + ": " + Mac + "; " + Ssid + "; " + Decibel;
     }
 
     public int CompareTo(Signal other)

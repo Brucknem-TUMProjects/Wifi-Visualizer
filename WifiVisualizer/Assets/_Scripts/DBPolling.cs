@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class DBPolling : MonoBehaviour
 {
     private readonly IPiConnector pi = new PiConnector();
-    private readonly IDBConnector database = new DBConnector();
+    private readonly IDBConnector<DBConnector> database = DBConnector.Instance;
 
     public Text locationsView;
     public Text signalsView;

@@ -11,7 +11,7 @@ public class SetupLocalPlayer : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            GetComponent<NetworkPolling>().enabled = true;
+            GetComponent<TrackingTarget>().enabled = true;
         }
     }
 }

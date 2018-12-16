@@ -15,10 +15,9 @@ public class Location : SQLable, IComparable<Location>
     public float RotY { get; set; }
     public float RotZ { get; set; }
 
-    public Location() : this(0, 0, 0, 0, 0, 0, 0)
-    {
+    public Location() : this(0, 0, 0, 0, 0, 0, 0) { }
 
-    }
+    public Location(long timestamp, Transform transform) : this(timestamp, transform.position.x, transform.position.y, transform.position.z, transform.rotation.x, transform.rotation.y, transform.rotation.z) { }
 
     public Location(long Timestamp, float PosX, float PosY, float PosZ, float RotX, float RotY, float RotZ)
     {

@@ -2,7 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class IDBConnector {
+public abstract class IDBConnector<T> where T : new()
+{
+    private static T instance;
+    public static T Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new T();
+            }
+            return instance;
+        }
+    }
 
     protected List<Location> locations;
     protected List<Signal> signals;
@@ -16,7 +29,8 @@ public abstract class IDBConnector {
         Reset();
     }
 
-    public virtual void CloseConnection() {
+    public virtual void CloseConnection()
+    {
         //Default implementation for override
         Debug.Log(locations + "" + signals);
     }
@@ -25,7 +39,7 @@ public abstract class IDBConnector {
     {
         Reset();
     }
-       
+
     public void Reset()
     {
         locations = new List<Location>();
@@ -52,6 +66,11 @@ public abstract class IDBConnector {
         }
     }
 
+    public void AddAll(params SQLable[] values)
+    {
+        AddAll(new List<SQLable>(values));
+    }
+
     public List<Location> GetLocations()
     {
         return locations;
@@ -62,5 +81,5 @@ public abstract class IDBConnector {
         return signals;
     }
 
-    public abstract List<T> Select<T>(long timestamp = -1) where T : SQLable, new();
+    public abstract List<U> Select<U>(long timestamp = -1) where U : SQLable, new();
 }

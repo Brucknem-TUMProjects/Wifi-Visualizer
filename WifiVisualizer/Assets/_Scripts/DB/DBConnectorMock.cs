@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DBConnectorMock : IDBConnector
+public class DBConnectorMock : IDBConnector<DBConnectorMock>
 {    
     public override List<T> Select<T>(long timestamp = -1)
     {
