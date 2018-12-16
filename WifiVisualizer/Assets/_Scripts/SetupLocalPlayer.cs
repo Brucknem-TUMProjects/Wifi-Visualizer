@@ -11,7 +11,7 @@ public class SetupLocalPlayer : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            GetComponent<Synchronizer>().enabled = true;
+            GetComponent<NetworkPolling>().enabled = true;
         }
     }
 }
