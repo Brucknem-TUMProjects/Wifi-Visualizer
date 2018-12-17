@@ -2,20 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class IDBConnector<T> where T : new()
+public abstract class IDBConnector
 {
-    private static T instance;
-    public static T Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new T();
-            }
-            return instance;
-        }
-    }
 
     protected List<Location> locations;
     protected List<Signal> signals;

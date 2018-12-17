@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class DBPolling : MonoBehaviour
 {
     private readonly IPiConnector pi = new PiConnector();
-    private readonly IDBConnector<DBConnector> database = DBConnector.Instance;
+    private readonly IDBConnector database = new DBConnector();
 
     public Text locationsView;
     public Text signalsView;
@@ -33,7 +33,7 @@ public class DBPolling : MonoBehaviour
         Debug.Log("Started DB Polling");
         trackable = transform.GetComponent<TrackableBehaviour>();
         
-        pi.ConnectServer(true, "192.168.2.23", 5005);
+        pi.ConnectServer(true, "127.0.0.1", 12345);
         database.ConnectDatabase("/Database/database.db");
         database.ClearTables();
         

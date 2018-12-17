@@ -149,8 +149,8 @@ public class PiConnector : IPiConnector
     override
     public void CloseConnection(string message = "")
     {
+        _clientSocket.Shutdown(SocketShutdown.Both);
         _clientSocket.Close();
-
         Debug.Log("Connection closed: " + message);
         isConnected = false;
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MeasurementPlacer : MonoBehaviour {
-    private readonly IDBConnector<DBConnector> database = DBConnector.Instance;
+    private readonly IDBConnector database = new DBConnector();
     public HaloScript[] measurements;
 
 	// Use this for initialization
