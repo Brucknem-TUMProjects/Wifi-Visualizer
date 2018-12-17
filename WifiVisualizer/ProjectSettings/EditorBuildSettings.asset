@@ -8,10 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Capture.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Networking.unity
     guid: c99da3d99b3ea624d9f12529b62d4801
-  - enabled: 1
-    path: Assets/Scenes/Start.unity
-    guid: b1e098a2a5e5ea34daf74a9aed15709f
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: Assets/Scenes/Handy.unity
+    guid: 09d977c0b3aaa934a858933870f1a9b9
   m_configObjects: {}

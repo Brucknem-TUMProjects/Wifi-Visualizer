@@ -10,7 +10,6 @@ public abstract class IPiConnector
 
     public Signal ParseResponse(long timestamp, string response)
     {
-        List<Signal> parsed = new List<Signal>();
         string[] rawSignals = response.Split('|');
         foreach (string rawSignal in rawSignals)
         {
