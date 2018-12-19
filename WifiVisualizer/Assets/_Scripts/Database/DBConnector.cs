@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class DBConnector : IDBConnector
+public class DBConnector : IDBConnector<DBConnector>
 {
     private SQLiteConnection dbconn;
             

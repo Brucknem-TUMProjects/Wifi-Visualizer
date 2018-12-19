@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MeasurementPlacer : MonoBehaviour {
-    private readonly IDBConnector database = new DBConnector();
     public HaloScript[] measurements;
 
 	// Use this for initialization
 	void Start () {
-        database.ConnectDatabase("/Database/database.db");
+        IDBConnector<DBConnector>.Instance.ConnectDatabase("/Database/IDBConnector<DBConnector>.Instance.db");
 
-        List<Location> locations = database.Select<Location>();
-        List<Signal> signals = database.Select<Signal>();
+        List<Location> locations = IDBConnector<DBConnector>.Instance.Select<Location>();
+        List<Signal> signals = IDBConnector<DBConnector>.Instance.Select<Signal>();
 
         Debug.Log(locations + "" +signals);
 

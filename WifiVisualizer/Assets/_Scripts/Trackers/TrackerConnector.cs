@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine.Playables;
 
-public class PiConnector : IPiConnector
+public class TrackerConnector : ITrackerConnector
 {
     /** Pi server socket */
     private Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -20,18 +20,14 @@ public class PiConnector : IPiConnector
     /** Request counter */
     public int threadsRunning = 0;
 
-    /** Weather host is an IP adress or a hostname */
-    private bool isIp;
-
     /** The adress of the host - IP or hostname */
     private string host;
 
     /** The port on which the host is listening */
     private int port;
 
-    /** Weather there is a currently a connection to the host */
-    public bool isConnected = false;
-        
+    Action<bool> onFinish;
+
     /*
      * Saves the server parameters and starts a thread to connect to server.
      * 
@@ -39,15 +35,15 @@ public class PiConnector : IPiConnector
      * @param host the name or IP of the host
      * @param the port on which the server is listening
      */
-    override
-   public void ConnectServer(bool isIp, string host, int port)
+    public
+   override void ConnectServer(string host, int port, Action<bool> onFinish)
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
 
-        this.isIp = isIp;
         this.host = host;
         this.port = port;
-        ParameterizedThreadStart start = delegate { ConnectServerThread(isIp, host, port); };
+        this.onFinish = onFinish;
+        ParameterizedThreadStart start = delegate { ConnectServerThread(host, port, onFinish); };
         Thread connectThread = new Thread(start);
         connectThread.Start();
     }
@@ -56,41 +52,44 @@ public class PiConnector : IPiConnector
      * Connection thread. 
      * @see ConnectServer
      */
-    private void ConnectServerThread(bool isIp, string host, int port)
+    private void ConnectServerThread(string host, int port, Action<bool> onFinish)
     {
-        if (threadsRunning > 10)
+        if (threadsRunning > 10) {
+            onFinish(false);
             return;
+        }
 
+        status = ConnectionStatus.CONNECTING;
         threadsRunning++;
         Debug.Log("Now in ConnectToServerThread()");
 
         try
         {
             Debug.Log("Connecting on " + host + ":" + port);
-            if (isIp)
+            try
             {
                 _clientSocket.Connect(IPAddress.Parse(host), port);
             }
-            else
+            catch (FormatException)
             {
                 _clientSocket.Connect(host, port);
+
             }
 
-
             Debug.Log("Connecting successfull!");
-            isConnected = true;
-
+            status = ConnectionStatus.CONNECTED;
         }
         catch (Exception e)
         {
             CloseConnection(e.Message);
         }
         threadsRunning--;
+        onFinish(status == ConnectionStatus.CONNECTED);
     }
-
+    
     private void Reconnect()
     {
-        ConnectServer(isIp, host, port);
+        ConnectServer(host, port, onFinish);
     }
 
     /// <summary>
@@ -124,11 +123,11 @@ public class PiConnector : IPiConnector
 
             response = Encoding.ASCII.GetString(data);
 
-            isConnected = true;
+            status = ConnectionStatus.CONNECTED;
         }
         catch (Exception)
         {
-            isConnected = false;
+            status = ConnectionStatus.DISCONNECTED;
             Reconnect();
             Debug.Log("Error in request!");
         }
@@ -149,9 +148,23 @@ public class PiConnector : IPiConnector
     override
     public void CloseConnection(string message = "")
     {
-        _clientSocket.Shutdown(SocketShutdown.Both);
-        _clientSocket.Close();
+        try
+        {
+            _clientSocket.Shutdown(SocketShutdown.Both);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        try
+        {
+            _clientSocket.Close();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
         Debug.Log("Connection closed: " + message);
-        isConnected = false;
+        status = ConnectionStatus.DISCONNECTED;
     }
 }

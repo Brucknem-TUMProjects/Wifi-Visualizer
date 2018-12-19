@@ -1,12 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class IPiConnector
+public abstract class ITrackerConnector
 {
-    public abstract void ConnectServer(bool isIp, string host, int port);
+    public enum ConnectionStatus
+    {
+        DISCONNECTED,
+        CONNECTED,
+        CONNECTING
+    }
+
+
+    public abstract void ConnectServer(string host, int port, Action<bool> onFinish);
     public abstract Signal RequestServer(long timestamp);
     public abstract void CloseConnection(string message = "");
+
+    /** Weather there is a currently a connection to the host */
+    protected ConnectionStatus status = ConnectionStatus.DISCONNECTED;
+    public ConnectionStatus Status
+    {
+        get
+        {
+            return status;
+        }
+    }
 
     public Signal ParseResponse(long timestamp, string response)
     {

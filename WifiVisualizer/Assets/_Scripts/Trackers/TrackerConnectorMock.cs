@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PiConnectorMock : IPiConnector
+public class TrackerConnectorMock : ITrackerConnector
 { 
     override
-    public void ConnectServer(bool isIp, string host, int port)
+    public void ConnectServer(string host, int port, Action<bool> onFinish)
     {
+        status = ConnectionStatus.CONNECTED;
+        onFinish(true);
         return;
     }
 
