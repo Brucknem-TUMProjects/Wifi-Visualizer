@@ -12,13 +12,10 @@ using UnityEngine.Playables;
 public class TrackerConnector : ITrackerConnector
 {
     /** Pi server socket */
-    private Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-    /** IP adress of pi */
-    public IPAddress serverIP = IPAddress.Loopback;
-
+    private Socket _clientSocket;
+    
     /** Request counter */
-    public int threadsRunning = 0;
+    private int threadsRunning = 0;
 
     /** The adress of the host - IP or hostname */
     private string host;
@@ -28,6 +25,8 @@ public class TrackerConnector : ITrackerConnector
 
     Action<bool> onFinish;
 
+    private bool connecting = true;
+
     /*
      * Saves the server parameters and starts a thread to connect to server.
      * 
@@ -35,11 +34,10 @@ public class TrackerConnector : ITrackerConnector
      * @param host the name or IP of the host
      * @param the port on which the server is listening
      */
-    public
-   override void ConnectServer(string host, int port, Action<bool> onFinish)
+    public override void ConnectServer(string host, int port, Action<bool> onFinish)
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
-
+        _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         this.host = host;
         this.port = port;
         this.onFinish = onFinish;
@@ -59,7 +57,6 @@ public class TrackerConnector : ITrackerConnector
             return;
         }
 
-        status = ConnectionStatus.CONNECTING;
         threadsRunning++;
         Debug.Log("Now in ConnectToServerThread()");
 
@@ -77,14 +74,15 @@ public class TrackerConnector : ITrackerConnector
             }
 
             Debug.Log("Connecting successfull!");
-            status = ConnectionStatus.CONNECTED;
+            onFinish(true);
         }
         catch (Exception e)
         {
             CloseConnection(e.Message);
+            onFinish(false);
         }
         threadsRunning--;
-        onFinish(status == ConnectionStatus.CONNECTED);
+        connecting = false;
     }
     
     private void Reconnect()
@@ -101,17 +99,17 @@ public class TrackerConnector : ITrackerConnector
     /// <param name="message">The message sent to the server.</param>
     /// <returns>A <see cref="System.String"/> containing the server response.</returns>
     override
-    public Signal RequestServer(long timestamp)
+    public Signal RequestServer(long timestamp, string message = "Yeet me dbs")
     {
         Debug.Log("Started request!");
         string response = "";
 
         try
         {
-            if (!SocketConnected)
+            if (!IsConnected())
                 throw new Exception("Not connected to server!");
 
-            byte[] buffer = Encoding.ASCII.GetBytes("Yeet me dbs");
+            byte[] buffer = Encoding.ASCII.GetBytes(message);
             _clientSocket.Send(buffer);
 
             byte[] receivedBuffer = new byte[1024];
@@ -122,12 +120,9 @@ public class TrackerConnector : ITrackerConnector
             Array.Copy(receivedBuffer, data, rec);
 
             response = Encoding.ASCII.GetString(data);
-
-            status = ConnectionStatus.CONNECTED;
         }
         catch (Exception)
         {
-            status = ConnectionStatus.DISCONNECTED;
             Reconnect();
             Debug.Log("Error in request!");
         }
@@ -137,12 +132,13 @@ public class TrackerConnector : ITrackerConnector
         return ParseResponse(timestamp, response);
     }
 
-    public bool SocketConnected
+    public override bool IsConnected()
     {
-        get
+        try
         {
-            return _clientSocket.Connected;
+            return connecting || !(_clientSocket.Poll(1, SelectMode.SelectRead) && _clientSocket.Available == 0);
         }
+        catch (SocketException) { return false; }
     }
 
     override
@@ -164,7 +160,7 @@ public class TrackerConnector : ITrackerConnector
         {
             Debug.Log(e.Message);
         }
+        connecting = true;
         Debug.Log("Connection closed: " + message);
-        status = ConnectionStatus.DISCONNECTED;
     }
 }

@@ -19,10 +19,16 @@ public class TrackerPolling : MonoBehaviour
     TrackableBehaviour trackable;
     Queue<Action> actions = new Queue<Action>();
 
+    private void Start()
+    {
+        trackable = transform.GetComponent<TrackableBehaviour>();
+    }
+
+
     public void Setup(string host, int port, TrackerViewButton view)
     {
         Debug.Log("Started Tracker: " + host + ":" + port);
-        trackable = transform.GetComponent<TrackableBehaviour>();
+        gameObject.SetActive(true);
         this.view = view;
         trackerConnection.ConnectServer(host, port, ConnectionSuccessful);
     }
@@ -58,6 +64,10 @@ public class TrackerPolling : MonoBehaviour
                                                         transform.rotation.eulerAngles.z));
             Request(timestamp);
         }
+        else if (!trackerConnection.IsConnected())
+        {
+            Remove();
+        }
     }
 
     private void Request(long timestamp) {
@@ -77,7 +87,7 @@ public class TrackerPolling : MonoBehaviour
     public void Remove()
     {
         trackerConnection.CloseConnection();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
         Destroy(view.gameObject);
     }
 

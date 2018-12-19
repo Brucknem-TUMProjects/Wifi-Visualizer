@@ -15,8 +15,13 @@ public class Handy : MonoBehaviour
     public RectTransform panel;
     private Image background;
 
+    private IWifiInfo wifiInfo = new WifiInfo();
+    private TCPServer server;
+
     private void Start()
     {
+        server = GetComponent<TCPServer>();
+        server.SetupServer();
         panel.sizeDelta = new Vector2(800, GetComponent<RectTransform>().rect.height - marker.rectTransform.rect.height);
         background = panel.GetComponent<Image>();
     }
@@ -25,15 +30,15 @@ public class Handy : MonoBehaviour
     void Update()
     {
         Colorize();
-        ip.text = "" + IWifiInfo<WifiInfoMock>.Instance.GetIP() + ":" + IWifiInfo<WifiInfoMock>.Instance.GetPort();
-        mac.text = "" + IWifiInfo<WifiInfoMock>.Instance.GetMAC();
-        ssid.text = "" + IWifiInfo<WifiInfoMock>.Instance.GetSSID();
-        db.text = "" + IWifiInfo<WifiInfoMock>.Instance.GetDecibel();
+        ip.text = "" + wifiInfo.GetIP() + ":" + wifiInfo.GetPort();
+        mac.text = "" + wifiInfo.GetMAC();
+        ssid.text = "" + wifiInfo.GetSSID();
+        db.text = "" + wifiInfo.GetDecibel();
     }    
 
     void Colorize()
     {
-        if (TCPServer.Instance.IsConnected)
+        if (server.IsConnected)
         {
             background.color = Color.green;
         }
@@ -45,6 +50,6 @@ public class Handy : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        TCPServer.Instance.CloseAllSockets();
+        server.CloseAllSockets();
     }
 }

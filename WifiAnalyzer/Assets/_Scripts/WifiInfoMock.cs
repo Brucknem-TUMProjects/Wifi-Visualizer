@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WifiInfoMock : IWifiInfo<WifiInfoMock> {
+public class WifiInfoMock : IWifiInfo {
     public override int GetDecibel()
     {
         return 5;

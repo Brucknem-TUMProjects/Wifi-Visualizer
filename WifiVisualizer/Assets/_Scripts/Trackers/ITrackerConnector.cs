@@ -3,30 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ITrackerConnector
+public abstract class ITrackerConnector 
 {
-    public enum ConnectionStatus
-    {
-        DISCONNECTED,
-        CONNECTED,
-        CONNECTING
-    }
-
-
     public abstract void ConnectServer(string host, int port, Action<bool> onFinish);
-    public abstract Signal RequestServer(long timestamp);
+    public abstract Signal RequestServer(long timestamp, string message = "Yeet me dbs");
     public abstract void CloseConnection(string message = "");
-
-    /** Weather there is a currently a connection to the host */
-    protected ConnectionStatus status = ConnectionStatus.DISCONNECTED;
-    public ConnectionStatus Status
-    {
-        get
-        {
-            return status;
-        }
-    }
-
+    public abstract bool IsConnected();
+    
     public Signal ParseResponse(long timestamp, string response)
     {
         string[] rawSignals = response.Split('|');

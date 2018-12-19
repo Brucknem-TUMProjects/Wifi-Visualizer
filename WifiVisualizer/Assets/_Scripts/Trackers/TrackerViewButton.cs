@@ -16,7 +16,6 @@ public class TrackerViewButton : Button {
     public void Setup(TrackerPolling trackerObject)
     {
         this.trackerObject = trackerObject;
-        SetConnectionStatus(ITrackerConnector.ConnectionStatus.CONNECTING);
     }
 
     private void OnButton()
@@ -28,21 +27,5 @@ public class TrackerViewButton : Button {
     public void SetConnected()
     {
         targetGraphic.color = Color.green;
-    }
-
-    public void SetConnectionStatus(ITrackerConnector.ConnectionStatus status)
-    {
-            switch (status)
-            {
-                case ITrackerConnector.ConnectionStatus.CONNECTED:
-                SetConnected();
-                break;
-                case ITrackerConnector.ConnectionStatus.CONNECTING:
-                    targetGraphic.color = Color.yellow;
-                    break;
-                case ITrackerConnector.ConnectionStatus.DISCONNECTED:
-                    targetGraphic.color = Color.red;
-                    break;
-            }
     }
 }

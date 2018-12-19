@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Vuforia;
+using System.Linq;
 
 public class TrackerManager : MonoBehaviour {
 
-    public TrackerPolling trackerPrefab;
     public RectTransform trackerViewPrefab;
     public RectTransform listView;
 
     public InputField hostIF;
     public InputField portIF;
     public Button connect;
+
+    public DatasetLoader dataset;
 
     private List<TrackerPolling> connectedTrackers;
 
@@ -35,7 +38,8 @@ public class TrackerManager : MonoBehaviour {
             return;
         }
 
-        TrackerPolling trackerTarget = Instantiate(trackerPrefab);
+        TrackerPolling trackerTarget = dataset.TrackerTargets[0];
+        trackerTarget.gameObject.SetActive(true);
         RectTransform trackerView = Instantiate(trackerViewPrefab);
 
         trackerTarget.Setup(host, port, trackerView.GetComponent<TrackerViewButton>());
@@ -50,6 +54,7 @@ public class TrackerManager : MonoBehaviour {
 
         hostIF.text = "";
         portIF.text = "";
+        VuforiaARController.Instance.UpdateState(false, true);
     }
 
     private void OnApplicationQuit()

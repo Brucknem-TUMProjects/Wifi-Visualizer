@@ -5,32 +5,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class TCPServer
+public class TCPServer : MonoBehaviour
 {
     private static byte[] _buffer = new byte[1024];
     private static List<Socket> _clientSockets = new List<Socket>();
     private static Socket _serverSocker = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-    
-    #region Singleton
-    private static TCPServer instance = new TCPServer();
-    private TCPServer()
-    {
-        SetupServer();
-    }
 
-    public static TCPServer Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance = new TCPServer();
-            }
-            return instance;
-        }
-    }
-    #endregion
+    IWifiInfo wifiInfo = new WifiInfo();
+    public Text debug;
+
+    Queue<string> requests = new Queue<string>();
 
     #region Properties
     public bool IsConnected
@@ -42,12 +28,21 @@ public class TCPServer
     }
     #endregion
 
-    private void SetupServer()
+    public void SetupServer()
     {
         Debug.Log("Setting up server...");
-        _serverSocker.Bind(new IPEndPoint(IPAddress.Any, IWifiInfo<WifiInfoMock>.Instance.GetPort()));
+        _serverSocker.Bind(new IPEndPoint(IPAddress.Any, wifiInfo.GetPort()));
         _serverSocker.Listen(1);
         _serverSocker.BeginAccept(new AsyncCallback(AcceptCallback), null);
+    }
+
+    private void Update()
+    {
+        try
+        {
+            debug.text = requests.Dequeue();
+        }
+        catch { };
     }
 
     private void AcceptCallback(IAsyncResult AR)
@@ -76,9 +71,11 @@ public class TCPServer
 
             string request = Encoding.ASCII.GetString(dataBuf);
             Debug.Log("Received: " + request);
+            requests.Enqueue(request);
 
             string response = ProcessRequest();
             Debug.Log("Responding: " + response);
+            requests.Enqueue(response);
 
             byte[] data = Encoding.ASCII.GetBytes(response);
             socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
@@ -135,6 +132,7 @@ public class TCPServer
 
     private string ProcessRequest()
     {
-        return IWifiInfo<WifiInfoMock>.Instance.GetMAC() + ";" + IWifiInfo<WifiInfoMock>.Instance.GetSSID() + ";" + IWifiInfo<WifiInfoMock>.Instance.GetDecibel();
+        requests.Enqueue("In process");
+        return wifiInfo.GetMAC() + ";" + wifiInfo.GetSSID() + ";" + wifiInfo.GetDecibel();
     }
 }
