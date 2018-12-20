@@ -18,6 +18,11 @@ public class WifiInfo : IWifiInfo
 
     public override int GetDecibel()
     {
+
+#if UNITY_EDITOR
+        return 0;
+#elif UNITY_ANDROID
+
         try
         {
             using (var wifiInfo = GetWifiInfo())
@@ -29,10 +34,15 @@ public class WifiInfo : IWifiInfo
         {
             return 0;
         }
+#endif
     }
 
     public override string GetSSID()
     {
+#if UNITY_EDITOR
+        return "Mock SSID";
+#elif UNITY_ANDROID
+
         try
         {
             using (var wifiInfo = GetWifiInfo())
@@ -44,10 +54,15 @@ public class WifiInfo : IWifiInfo
         {
             return "Error SSID";
         }
+#endif
     }
 
     public override string GetMAC()
     {
+#if UNITY_EDITOR
+        return "Mock MAC";
+#elif UNITY_ANDROID
+
         try
         {
             using (var wifiInfo = GetWifiInfo())
@@ -59,10 +74,15 @@ public class WifiInfo : IWifiInfo
         {
             return "Error MAC";
         }
+#endif
     }
 
     public override string GetIP()
     {
+#if UNITY_EDITOR
+        return "localhost";
+#elif UNITY_ANDROID
+
         try
         {
             using (var wifiInfo = GetWifiInfo())
@@ -77,5 +97,6 @@ public class WifiInfo : IWifiInfo
         {
             return "Error IP";
         }
+#endif
     }
 }

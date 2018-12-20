@@ -14,13 +14,14 @@ public class TCPServer : MonoBehaviour
     private static Socket _serverSocker = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
     private WifiInfo wifiInfo = new WifiInfo();
-    public Text debug;
-
-    public Queue<string> requests = new Queue<string>();
+    public Image marker;
+    public Sprite[] markers;
 
     private string mac;
     private string ssid;
     private string db;
+
+    Queue<Action> queue = new Queue<Action>();
 
     #region Properties
     public bool IsConnected
@@ -45,11 +46,10 @@ public class TCPServer : MonoBehaviour
         mac = wifiInfo.GetMAC();
         ssid = wifiInfo.GetSSID();
         db = wifiInfo.GetDecibel() + "";
-        try
+        if(queue.Count > 0)
         {
-            debug.text = requests.Dequeue();
+            queue.Dequeue()();
         }
-        catch { };
     }
 
     private void AcceptCallback(IAsyncResult AR)
@@ -78,11 +78,9 @@ public class TCPServer : MonoBehaviour
 
             string request = Encoding.ASCII.GetString(dataBuf);
             Debug.Log("Received: " + request);
-            requests.Enqueue(request);
 
-            string response = ProcessRequest();
+            string response = ProcessRequest(request);
             Debug.Log("Responding: " + response);
-            requests.Enqueue(response);
 
             byte[] data = Encoding.ASCII.GetBytes(response);
             socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
@@ -137,8 +135,21 @@ public class TCPServer : MonoBehaviour
         _serverSocker.Close();
     }
 
-    private string ProcessRequest()
+    private string ProcessRequest(string request)
     {
-        return mac + ";" + ssid + ";" + db;
+        try
+        {
+            int markerID = int.Parse(request);
+            if(markerID >= markers.Length)
+            {
+                throw new ArgumentException();
+            }
+            queue.Enqueue(() => marker.sprite = markers[markerID]);
+            return markerID + "";
+        }
+        catch
+        {
+            return mac + ";" + ssid + ";" + db;
+        }
     }
 }
