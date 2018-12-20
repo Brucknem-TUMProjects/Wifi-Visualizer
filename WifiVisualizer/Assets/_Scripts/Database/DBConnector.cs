@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class DBConnector : IDBConnector<DBConnector>
+public class DBConnector : IDBConnector
 {
     private SQLiteConnection dbconn;
             
@@ -63,7 +63,6 @@ public class DBConnector : IDBConnector<DBConnector>
 
     public override void CloseConnection()
     {
-        base.CloseConnection();
         Write(locations);
         Write(signals);
 

@@ -2,21 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class IDBConnector<T> where T : new ()
+public abstract class IDBConnector
 {
-    private static T instance;
-    public static T Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance = new T();
-            }
-            return instance;
-        }
-    }
-
     protected List<Location> locations;
     protected List<Signal> signals;
 
@@ -32,7 +19,7 @@ public abstract class IDBConnector<T> where T : new ()
     public virtual void CloseConnection()
     {
         //Default implementation for override
-        Debug.Log(locations + "" + signals);
+        Debug.Log("Default Connection close used");
     }
 
     public virtual void ClearTables()

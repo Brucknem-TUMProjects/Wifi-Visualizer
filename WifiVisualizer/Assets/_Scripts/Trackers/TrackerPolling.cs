@@ -19,17 +19,23 @@ public class TrackerPolling : MonoBehaviour
     TrackableBehaviour trackable;
     Queue<Action> actions = new Queue<Action>();
 
+    long lastStarted = 0;
+    long deltaMillis = 100;
+
+    IDBConnector database;
+
     private void Start()
     {
         trackable = transform.GetComponent<TrackableBehaviour>();
     }
 
 
-    public void Setup(string host, int port, TrackerViewButton view)
+    public void Setup(string host, int port, IDBConnector database, TrackerViewButton view)
     {
         Debug.Log("Started Tracker: " + host + ":" + port);
         gameObject.SetActive(true);
         this.view = view;
+        this.database = database;
         trackerConnection.ConnectServer(host, port, ConnectionSuccessful);
     }
 
@@ -45,36 +51,44 @@ public class TrackerPolling : MonoBehaviour
         }
     }
     
-    private void Update()
+    private void FixedUpdate()
     {
         if(actions.Count > 0)
         {
             actions.Dequeue()();
         }
 
-        if (IsTracked)
+        if (IsTracked && (Environment.TickCount - lastStarted) > deltaMillis)
         {
             long timestamp = Environment.TickCount;
-            IDBConnector<DBConnectorMock>.Instance.Add(new Location(timestamp,
-                                                        transform.position.x,
-                                                        transform.position.y,
-                                                        transform.position.z,
-                                                        transform.rotation.eulerAngles.x,
-                                                        transform.rotation.eulerAngles.y,
-                                                        transform.rotation.eulerAngles.z));
-            Request(timestamp);
-        }
+            lastStarted = timestamp;
+            try {
+                Location location = new Location(timestamp,
+                                                            transform.position.x,
+                                                            transform.position.y,
+                                                            transform.position.z,
+                                                            transform.rotation.eulerAngles.x,
+                                                            transform.rotation.eulerAngles.y,
+                                                            transform.rotation.eulerAngles.z);
+                Request(location, timestamp);
+            }
+            catch { };
+            }
         else if (!trackerConnection.IsConnected())
         {
             Remove();
         }
     }
 
-    private void Request(long timestamp) {
+    private void Request(Location location, long timestamp) {
         new Thread(() =>
         {
             Signal signal = trackerConnection.RequestServer(timestamp);
-            IDBConnector<DBConnectorMock>.Instance.Add(signal);
+            if (signal != null)
+            {
+                database.Add(signal);
+                database.Add(location);
+            }
         }).Start();
     }
 

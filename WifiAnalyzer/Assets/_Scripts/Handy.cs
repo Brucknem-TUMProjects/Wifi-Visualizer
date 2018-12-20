@@ -10,20 +10,22 @@ public class Handy : MonoBehaviour
     public Text mac;
     public Text ssid;
     public Text db;
+    public Button exit;
 
     public Image marker;
     public RectTransform panel;
     private Image background;
 
-    private IWifiInfo wifiInfo = new WifiInfo();
     private TCPServer server;
+    private IWifiInfo wifiInfo = new WifiInfo();
 
     private void Start()
     {
         server = GetComponent<TCPServer>();
         server.SetupServer();
-        panel.sizeDelta = new Vector2(800, GetComponent<RectTransform>().rect.height - marker.rectTransform.rect.height);
+    //    panel.sizeDelta = new Vector2(800, GetComponent<RectTransform>().rect.height - marker.rectTransform.rect.height);
         background = panel.GetComponent<Image>();
+        exit.onClick.AddListener(delegate { OnApplicationQuit(); Application.Quit(); });
     }
 
     // Update is called once per frame

@@ -17,12 +17,14 @@ public class TrackerManager : MonoBehaviour {
     public DatasetLoader dataset;
 
     private List<TrackerPolling> connectedTrackers;
+    private IDBConnector database;
 
     private void Start()
     {
         connectedTrackers = new List<TrackerPolling>();
-        IDBConnector<DBConnectorMock>.Instance.ConnectDatabase("/Database/database.db");
-        IDBConnector<DBConnectorMock>.Instance.ClearTables();
+        database = new DBConnector();
+        database.ConnectDatabase("/Database/database.db");
+        database.ClearTables();
 
         connect.onClick.AddListener(CreateTracker);
     }
@@ -42,7 +44,7 @@ public class TrackerManager : MonoBehaviour {
         trackerTarget.gameObject.SetActive(true);
         RectTransform trackerView = Instantiate(trackerViewPrefab);
 
-        trackerTarget.Setup(host, port, trackerView.GetComponent<TrackerViewButton>());
+        trackerTarget.Setup(host, port, database, trackerView.GetComponent<TrackerViewButton>());
         connectedTrackers.Add(trackerTarget);
 
         trackerView.SetParent(listView);
@@ -54,11 +56,10 @@ public class TrackerManager : MonoBehaviour {
 
         hostIF.text = "";
         portIF.text = "";
-        VuforiaARController.Instance.UpdateState(false, true);
     }
 
     private void OnApplicationQuit()
     {
-        IDBConnector<DBConnectorMock>.Instance.CloseConnection();
+        database.CloseConnection();
     }
 }

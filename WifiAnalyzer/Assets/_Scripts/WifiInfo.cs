@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class WifiInfo : IWifiInfo
 {
-
     private AndroidJavaObject GetWifiInfo()
     {
         using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))

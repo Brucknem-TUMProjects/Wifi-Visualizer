@@ -123,7 +123,7 @@ public class TrackerConnector : ITrackerConnector
         }
         catch (Exception)
         {
-            Reconnect();
+           // Reconnect();
             Debug.Log("Error in request!");
         }
 

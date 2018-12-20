@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class MeasurementPlacer : MonoBehaviour {
     public HaloScript[] measurements;
+    private IDBConnector database;
 
-	// Use this for initialization
-	void Start () {
-        IDBConnector<DBConnector>.Instance.ConnectDatabase("/Database/IDBConnector<DBConnector>.Instance.db");
+    // Use this for initialization
+    void Start () {
+        database = new DBConnector();
+        database.ConnectDatabase("/Database/database.db");
 
-        List<Location> locations = IDBConnector<DBConnector>.Instance.Select<Location>();
-        List<Signal> signals = IDBConnector<DBConnector>.Instance.Select<Signal>();
+        List<Location> locations = database.Select<Location>();
+        List<Signal> signals = database.Select<Signal>();
 
         Debug.Log(locations + "" +signals);
 

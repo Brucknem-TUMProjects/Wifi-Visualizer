@@ -13,10 +13,14 @@ public class TCPServer : MonoBehaviour
     private static List<Socket> _clientSockets = new List<Socket>();
     private static Socket _serverSocker = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-    IWifiInfo wifiInfo = new WifiInfo();
+    private WifiInfo wifiInfo = new WifiInfo();
     public Text debug;
 
-    Queue<string> requests = new Queue<string>();
+    public Queue<string> requests = new Queue<string>();
+
+    private string mac;
+    private string ssid;
+    private string db;
 
     #region Properties
     public bool IsConnected
@@ -38,6 +42,9 @@ public class TCPServer : MonoBehaviour
 
     private void Update()
     {
+        mac = wifiInfo.GetMAC();
+        ssid = wifiInfo.GetSSID();
+        db = wifiInfo.GetDecibel() + "";
         try
         {
             debug.text = requests.Dequeue();
@@ -132,7 +139,6 @@ public class TCPServer : MonoBehaviour
 
     private string ProcessRequest()
     {
-        requests.Enqueue("In process");
-        return wifiInfo.GetMAC() + ";" + wifiInfo.GetSSID() + ";" + wifiInfo.GetDecibel();
+        return mac + ";" + ssid + ";" + db;
     }
 }

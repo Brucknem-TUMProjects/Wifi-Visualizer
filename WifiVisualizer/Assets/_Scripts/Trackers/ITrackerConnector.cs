@@ -12,13 +12,19 @@ public abstract class ITrackerConnector
     
     public Signal ParseResponse(long timestamp, string response)
     {
-        string[] rawSignals = response.Split('|');
-        foreach (string rawSignal in rawSignals)
+        try
         {
-            string[] values = rawSignal.Split(';');
-            Signal signal = new Signal(timestamp, values[0], values[1], -1 * int.Parse(values[2]));
-            return signal;
-           // parsed.Add(signal);
+            string[] rawSignals = response.Split('|');
+            foreach (string rawSignal in rawSignals)
+            {
+                string[] values = rawSignal.Split(';');
+                Signal signal = new Signal(timestamp, values[0], values[1], int.Parse(values[2]));
+                return signal;
+                // parsed.Add(signal);
+            }
+        }
+        catch
+        {
         }
 
         return null;
