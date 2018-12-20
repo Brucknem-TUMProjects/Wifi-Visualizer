@@ -5,8 +5,9 @@ using UnityEngine;
 
 public abstract class ITrackerConnector 
 {
-    public abstract void ConnectServer(string host, int port, Action<bool> onFinish);
-    public abstract Signal RequestServer(long timestamp, string message = "Yeet me dbs");
+    public abstract void ConnectServer(string host, int port, int id, Action<int, bool> onFinish);
+    public abstract Signal RequestServer(long timestamp);
+    public abstract string RequestServer(string message);
     public abstract void CloseConnection(string message = "");
     public abstract bool IsConnected();
     

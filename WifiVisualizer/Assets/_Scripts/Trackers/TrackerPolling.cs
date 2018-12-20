@@ -14,13 +14,11 @@ using UnityEngine.UI;
 public class TrackerPolling : MonoBehaviour
 {
     private readonly ITrackerConnector trackerConnection = new TrackerConnector();
-    private TrackerViewButton view;
-
     TrackableBehaviour trackable;
-    Queue<Action> actions = new Queue<Action>();
 
     long lastStarted = 0;
-    long deltaMillis = 100;
+    readonly long deltaMillis = 100;
+    //int id;
 
     IDBConnector database;
 
@@ -30,39 +28,28 @@ public class TrackerPolling : MonoBehaviour
     }
 
 
-    public void Setup(string host, int port, IDBConnector database, TrackerViewButton view)
+    public void Setup(string host, int port, int id, IDBConnector database, Action<int, bool> callback)
     {
         Debug.Log("Started Tracker: " + host + ":" + port);
         gameObject.SetActive(true);
-        this.view = view;
         this.database = database;
-        trackerConnection.ConnectServer(host, port, ConnectionSuccessful);
+        //this.id = id;
+        trackerConnection.ConnectServer(host, port, id, callback);
     }
 
-    public void ConnectionSuccessful(bool connected)
-    {
-        if(!connected)
-        {
-            actions.Enqueue(Remove);
-        }
-        else
-        {
-            actions.Enqueue(view.SetConnected);
-        }
-    }
-    
     private void FixedUpdate()
     {
-        if(actions.Count > 0)
-        {
-            actions.Dequeue()();
-        }
+        //if (actions.Count > 0)
+        //{
+        //    actions.Dequeue()();
+        //}
 
         if (IsTracked && (Environment.TickCount - lastStarted) > deltaMillis)
         {
             long timestamp = Environment.TickCount;
             lastStarted = timestamp;
-            try {
+            try
+            {
                 Location location = new Location(timestamp,
                                                             transform.position.x,
                                                             transform.position.y,
@@ -73,14 +60,15 @@ public class TrackerPolling : MonoBehaviour
                 Request(location, timestamp);
             }
             catch { };
-            }
+        }
         else if (!trackerConnection.IsConnected())
         {
             Remove();
         }
     }
 
-    private void Request(Location location, long timestamp) {
+    private void Request(Location location, long timestamp)
+    {
         new Thread(() =>
         {
             Signal signal = trackerConnection.RequestServer(timestamp);
@@ -102,7 +90,6 @@ public class TrackerPolling : MonoBehaviour
     {
         trackerConnection.CloseConnection();
         gameObject.SetActive(false);
-        Destroy(view.gameObject);
     }
 
     private bool IsTracked
@@ -111,6 +98,14 @@ public class TrackerPolling : MonoBehaviour
         {
             var status = trackable.CurrentStatus;
             return status == TrackableBehaviour.Status.TRACKED;
+        }
+    }
+
+    public bool IsConnected
+    {
+        get
+        {
+            return trackerConnection.IsConnected();
         }
     }
 }

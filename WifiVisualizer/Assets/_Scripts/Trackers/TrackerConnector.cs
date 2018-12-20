@@ -17,13 +17,15 @@ public class TrackerConnector : ITrackerConnector
     /** Request counter */
     private int threadsRunning = 0;
 
-    /** The adress of the host - IP or hostname */
-    private string host;
+    ///** The adress of the host - IP or hostname */
+    //private string host;
 
-    /** The port on which the host is listening */
-    private int port;
+    ///** The port on which the host is listening */
+    //private int port;
 
-    Action<bool> onFinish;
+    //private int id;
+
+    //Action<int, bool> onFinish;
 
     private bool connecting = true;
 
@@ -34,14 +36,15 @@ public class TrackerConnector : ITrackerConnector
      * @param host the name or IP of the host
      * @param the port on which the server is listening
      */
-    public override void ConnectServer(string host, int port, Action<bool> onFinish)
+    public override void ConnectServer(string host, int port, int id, Action<int, bool> onFinish)
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
         _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        this.host = host;
-        this.port = port;
-        this.onFinish = onFinish;
-        ParameterizedThreadStart start = delegate { ConnectServerThread(host, port, onFinish); };
+        //this.host = host;
+        //this.port = port;
+        //this.id = id;
+        //this.onFinish = onFinish;
+        ParameterizedThreadStart start = delegate { ConnectServerThread(host, port, id, onFinish); };
         Thread connectThread = new Thread(start);
         connectThread.Start();
     }
@@ -50,10 +53,10 @@ public class TrackerConnector : ITrackerConnector
      * Connection thread. 
      * @see ConnectServer
      */
-    private void ConnectServerThread(string host, int port, Action<bool> onFinish)
+    private void ConnectServerThread(string host, int port, int id, Action<int, bool> onFinish)
     {
         if (threadsRunning > 10) {
-            onFinish(false);
+            onFinish(id, false);
             return;
         }
 
@@ -74,20 +77,19 @@ public class TrackerConnector : ITrackerConnector
             }
 
             Debug.Log("Connecting successfull!");
-            onFinish(true);
+
+            bool markerSetCorrectly = RequestServer(id + "") == id + "";
+
+            Debug.Log("Marker set correctly? " + markerSetCorrectly);
+            onFinish(id, markerSetCorrectly);
         }
         catch (Exception e)
         {
             CloseConnection(e.Message);
-            onFinish(false);
+            onFinish(id, false);
         }
         threadsRunning--;
         connecting = false;
-    }
-    
-    private void Reconnect()
-    {
-        ConnectServer(host, port, onFinish);
     }
 
     /// <summary>
@@ -99,7 +101,7 @@ public class TrackerConnector : ITrackerConnector
     /// <param name="message">The message sent to the server.</param>
     /// <returns>A <see cref="System.String"/> containing the server response.</returns>
     override
-    public Signal RequestServer(long timestamp, string message = "Yeet me dbs")
+    public string RequestServer(string message)
     {
         Debug.Log("Started request!");
         string response = "";
@@ -129,7 +131,15 @@ public class TrackerConnector : ITrackerConnector
 
         Debug.Log("Received: " + response);
 
-        return ParseResponse(timestamp, response);
+        return response;
+    }
+
+
+    override
+    public Signal RequestServer(long timestamp)
+    {
+        return ParseResponse(timestamp, RequestServer("Yeet me dbsssss"));
+
     }
 
     public override bool IsConnected()
