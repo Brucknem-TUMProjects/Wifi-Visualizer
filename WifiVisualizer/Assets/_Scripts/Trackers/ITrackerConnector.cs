@@ -5,12 +5,12 @@ using UnityEngine;
 
 public abstract class ITrackerConnector 
 {
-    public abstract void ConnectServer(string host, int port, int id, Action<int, bool> onFinish);
+    public abstract void ConnectServer(string host, int port, int id, Action<int, float, bool> onFinish, Action<int> onClosed);
     public abstract Signal RequestServer(long timestamp);
     public abstract string RequestServer(string message);
     public abstract void CloseConnection(string message = "");
     public abstract bool IsConnected();
-    
+
     public Signal ParseResponse(long timestamp, string response)
     {
         try

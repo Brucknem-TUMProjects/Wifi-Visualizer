@@ -23,11 +23,12 @@ public class TrackerConnector : ITrackerConnector
     ///** The port on which the host is listening */
     //private int port;
 
-    //private int id;
+    private int id;
 
     //Action<int, bool> onFinish;
 
     private bool connecting = true;
+    Action<int> onClosed;
 
     /*
      * Saves the server parameters and starts a thread to connect to server.
@@ -36,14 +37,15 @@ public class TrackerConnector : ITrackerConnector
      * @param host the name or IP of the host
      * @param the port on which the server is listening
      */
-    public override void ConnectServer(string host, int port, int id, Action<int, bool> onFinish)
+    public override void ConnectServer(string host, int port, int id, Action<int, float, bool> onFinish, Action<int> onClosed)
     {
         Debug.Log("Creating new Thread with ConnectToServerThread()");
         _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //this.host = host;
         //this.port = port;
-        //this.id = id;
+        this.id = id;
         //this.onFinish = onFinish;
+        this.onClosed = onClosed;
         ParameterizedThreadStart start = delegate { ConnectServerThread(host, port, id, onFinish); };
         Thread connectThread = new Thread(start);
         connectThread.Start();
@@ -53,10 +55,10 @@ public class TrackerConnector : ITrackerConnector
      * Connection thread. 
      * @see ConnectServer
      */
-    private void ConnectServerThread(string host, int port, int id, Action<int, bool> onFinish)
+    private void ConnectServerThread(string host, int port, int id, Action<int, float, bool> onFinish)
     {
         if (threadsRunning > 10) {
-            onFinish(id, false);
+            onFinish(id, 0, false);
             return;
         }
 
@@ -78,15 +80,16 @@ public class TrackerConnector : ITrackerConnector
 
             Debug.Log("Connecting successfull!");
 
-            bool markerSetCorrectly = RequestServer(id + "") == id + "";
-
-            Debug.Log("Marker set correctly? " + markerSetCorrectly);
-            onFinish(id, markerSetCorrectly);
+            string[] split = RequestServer(id + "").Split(';');
+            bool markerSetCorrectly = split[0] == id + "";
+            float width = float.Parse(split[1]);
+            Debug.Log("Marker set correctly? " + markerSetCorrectly + " - " + width);
+            onFinish(id, width, markerSetCorrectly);
         }
         catch (Exception e)
         {
             CloseConnection(e.Message);
-            onFinish(id, false);
+            onFinish(id, 0, false);
         }
         threadsRunning--;
         connecting = false;
@@ -148,7 +151,7 @@ public class TrackerConnector : ITrackerConnector
         {
             return connecting || !(_clientSocket.Poll(1, SelectMode.SelectRead) && _clientSocket.Available == 0);
         }
-        catch (SocketException) { return false; }
+        catch (Exception) { return false; }
     }
 
     override
@@ -171,6 +174,9 @@ public class TrackerConnector : ITrackerConnector
             Debug.Log(e.Message);
         }
         connecting = true;
+
+        onClosed(id);
+
         Debug.Log("Connection closed: " + message);
     }
 }

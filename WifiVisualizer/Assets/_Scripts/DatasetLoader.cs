@@ -133,4 +133,65 @@ public class DatasetLoader : MonoBehaviour
             }
         }
     }
+
+    public void ResizeMarkers(float width)
+    {
+        foreach(TrackerPolling trackableBehaviour in TrackerTargets) {
+            ImageTargetBehaviour imageTarget = trackableBehaviour.transform.GetComponent<ImageTargetBehaviour>();
+            //No point trying to rescale if it's already scaled !
+            if (imageTarget.transform.localScale.x == width && imageTarget.transform.localScale.z == width)
+            {
+                return;
+            }
+            //Retreiving the track
+            ObjectTracker tracker = Vuforia.TrackerManager.Instance.GetTracker<ObjectTracker>();
+            //foolproofing !
+            if (tracker == null)
+            {
+                Debug.LogWarning("You might be using a virtual camera (Vuforia Play). The scaling of the trackable " + imageTarget.name + " will only be virtual wich doesn't unsure your function will work in actual runtime");
+            }
+            else
+            {
+                //Retreiving all datasets
+                IEnumerable<DataSet> sets = tracker.GetActiveDataSets();
+                bool foundAndReplaced = false;
+                //browsing through the datasets
+                using (var setsEnum = sets.GetEnumerator())
+                {
+                    while (!foundAndReplaced && setsEnum.MoveNext())
+                    {
+                        DataSet ds = setsEnum.Current;
+                        //deactivating every datasets, one at a time
+                        tracker.DeactivateDataSet(ds);
+                        //retreiving all trackables
+                        IEnumerable<Trackable> tracks = ds.GetTrackables();
+                        //browsing through trackables
+                        using (var tracksEnum = tracks.GetEnumerator())
+                        {
+                            while (!foundAndReplaced && tracksEnum.MoveNext())
+                            {
+                                Trackable trackable = tracksEnum.Current;
+                                //Looking for Image Targets
+                                if (trackable is ImageTarget)
+                                {
+                                    ImageTarget it = trackable as ImageTarget;
+                                    //Looking for MY image target that I need to update
+                                    if (it.ID == imageTarget.ImageTarget.ID)
+                                    {
+                                        //Now, Vuforia knows the real size of my target
+                                        it.SetSize(new Vector2(width, width));
+                                        foundAndReplaced = true;
+                                    }
+                                }
+                            }
+                        }
+                        //Once I'm done with this dataset, I can reactivate it
+                        tracker.ActivateDataSet(ds);
+                    }
+                }
+            }
+            //Updates the virtual size of my imagetarget along with his child GameObjects. (Also does the scaling on Vuforia previews !)
+            imageTarget.transform.localScale = new Vector3(width, imageTarget.transform.localScale.y, width);
+        }
+    }
 }

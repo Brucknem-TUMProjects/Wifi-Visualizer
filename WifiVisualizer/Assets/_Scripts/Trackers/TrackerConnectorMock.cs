@@ -6,9 +6,9 @@ using UnityEngine;
 public class TrackerConnectorMock : ITrackerConnector
 { 
     override
-    public void ConnectServer(string host, int port, int id, Action<int, bool> onFinish)
+    public void ConnectServer(string host, int port, int id, Action<int, float, bool> onFinish, Action<int> onClosed)
     {
-        onFinish(id, true);
+        onFinish(id, 5, true);
         return;
     }
 
@@ -16,7 +16,7 @@ public class TrackerConnectorMock : ITrackerConnector
     {
         return;
     }
-    
+
     public override bool IsConnected()
     {
         return true;

@@ -44,6 +44,10 @@ public class TrackerManager : MonoBehaviour {
 
     private void CreateTracker()
     {
+        if(dataset.TrackerTargets.Count == connectedTrackers.Count)
+        {
+            return;
+        }
         string host = hostIF.text;
         int port = -1;
         int.TryParse(portIF.text, out port);
@@ -53,18 +57,23 @@ public class TrackerManager : MonoBehaviour {
             return;
         }
 
-        int id = UnityEngine.Random.Range(0, dataset.TrackerTargets.Count);
+        List<int> all = range(dataset.TrackerTargets.Count);
+        all.RemoveAll(x => connectedTrackers.Keys.Contains(x));
+
+        int id = all[0];
         TrackerPolling trackerTarget = dataset.TrackerTargets[id];
         RectTransform trackerView = Instantiate(trackerViewPrefab);
 
         trackerTarget.gameObject.SetActive(true);
-        trackerTarget.Setup(host, port, id, database, ConnectionSuccessful);
+        trackerTarget.Setup(host, port, id, database, ConnectionSuccessful, Remove);
         connectedTrackers.Add(id, trackerTarget);
 
         trackerView.SetParent(listView);
         trackerView.localScale = new Vector3(1, 1, 1);
         trackerView.localPosition = new Vector3(trackerView.localPosition.x, trackerView.localPosition.y, 1);
+
         trackerView.GetComponent<Button>().onClick.AddListener(delegate { Remove(id); });
+
         trackerView.GetComponent<TrackerViewButton>().Setup(trackerTarget);
         trackerView.GetComponentInChildren<Text>().text = host + ":" + port;
         connectedTrackerViews.Add(id, trackerView);
@@ -73,7 +82,19 @@ public class TrackerManager : MonoBehaviour {
         portIF.text = "";
     }
 
-    public void ConnectionSuccessful(int id, bool connected)
+    public static List<int> range(int b)
+    {
+        List<int> result = new List<int>();
+
+        for (int i = 0; i < b; i++)
+        {
+            result.Add(i);
+        }
+
+        return result;
+    }
+
+    public void ConnectionSuccessful(int id, float width, bool connected)
     {
         if (!connected)
         {
@@ -82,16 +103,28 @@ public class TrackerManager : MonoBehaviour {
         else
         {
             actions.Enqueue(() => connectedTrackerViews[id].GetComponent<UnityEngine.UI.Image>().color = Color.green);
+            //actions.Enqueue(() => connectedTrackers[id].transform.localScale = new Vector3(width, connectedTrackers[id].transform.localScale.y, width));
+            actions.Enqueue(() => dataset.ResizeMarkers(width));
         }
     }
 
     private void Remove(int id)
     {
-        actions.Enqueue(connectedTrackers[id].Remove);
-        connectedTrackers.Remove(id);
-        connectedTrackerViews.Remove(id);
+        try
+        {
+            var view = connectedTrackerViews[id];
+            var tracker = connectedTrackers[id];
+            connectedTrackers.Remove(id);
+            connectedTrackerViews.Remove(id);
+            actions.Enqueue(tracker.Remove);
+            actions.Enqueue(() =>
+            {
+                try { Destroy(view.gameObject); } catch { };
+            });
+        }
+        catch { }
     }
-
+    
     private void OnApplicationQuit()
     {
         database.CloseConnection();

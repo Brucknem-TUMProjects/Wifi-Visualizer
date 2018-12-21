@@ -28,13 +28,14 @@ public class TrackerPolling : MonoBehaviour
     }
 
 
-    public void Setup(string host, int port, int id, IDBConnector database, Action<int, bool> callback)
+    public void Setup(string host, int port, int id, IDBConnector database, Action<int, float, bool> callback, Action<int> onClosed)
     {
         Debug.Log("Started Tracker: " + host + ":" + port);
         gameObject.SetActive(true);
         this.database = database;
+        //this.onClosed = onClosed;
         //this.id = id;
-        trackerConnection.ConnectServer(host, port, id, callback);
+        trackerConnection.ConnectServer(host, port, id, callback, onClosed);
     }
 
     private void FixedUpdate()
