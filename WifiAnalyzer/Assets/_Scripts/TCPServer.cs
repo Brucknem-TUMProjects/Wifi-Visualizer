@@ -17,11 +17,14 @@ public class TCPServer : MonoBehaviour
     public Image marker;
     public Sprite[] markers;
 
+    //public Text debug;
+
     private string mac;
     private string ssid;
     private string db;
 
     Queue<Action> queue = new Queue<Action>();
+    float width;
 
     #region Properties
     public bool IsConnected
@@ -33,12 +36,14 @@ public class TCPServer : MonoBehaviour
     }
     #endregion
 
-    public void SetupServer()
+    public void SetupServer(float width)
     {
         Debug.Log("Setting up server...");
         _serverSocker.Bind(new IPEndPoint(IPAddress.Any, wifiInfo.GetPort()));
         _serverSocker.Listen(1);
         _serverSocker.BeginAccept(new AsyncCallback(AcceptCallback), null);
+        this.width = width;
+        //debug.text = width + "";
     }
 
     private void Update()
@@ -46,7 +51,7 @@ public class TCPServer : MonoBehaviour
         mac = wifiInfo.GetMAC();
         ssid = wifiInfo.GetSSID();
         db = wifiInfo.GetDecibel() + "";
-        if(queue.Count > 0)
+        while(queue.Count > 0)
         {
             queue.Dequeue()();
         }
@@ -60,6 +65,7 @@ public class TCPServer : MonoBehaviour
             _clientSockets.Add(socket);
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
             _serverSocker.BeginAccept(new AsyncCallback(AcceptCallback), null);
+            queue.Enqueue(() => marker.color = Color.white);
         }
         catch (Exception e)
         {
@@ -101,6 +107,7 @@ public class TCPServer : MonoBehaviour
 
     private void OnConnectionClosed(IAsyncResult AR)
     {
+        queue.Enqueue(() => marker.color = Color.black);
         Socket socket = (Socket)AR.AsyncState;
         socket.Close();
         RemoveDisconnected();
@@ -145,7 +152,7 @@ public class TCPServer : MonoBehaviour
                 throw new ArgumentException();
             }
             queue.Enqueue(() => marker.sprite = markers[markerID]);
-            return markerID + "";
+            return markerID + ";" + width;
         }
         catch
         {

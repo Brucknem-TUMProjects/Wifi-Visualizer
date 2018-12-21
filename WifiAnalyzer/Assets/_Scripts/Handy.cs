@@ -21,8 +21,11 @@ public class Handy : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_ANDROID
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
         server = GetComponent<TCPServer>();
-        server.SetupServer();
+        server.SetupServer(Width);
     //    panel.sizeDelta = new Vector2(800, GetComponent<RectTransform>().rect.height - marker.rectTransform.rect.height);
         background = panel.GetComponent<Image>();
         exit.onClick.AddListener(delegate { OnApplicationQuit(); Application.Quit(); });
@@ -53,5 +56,31 @@ public class Handy : MonoBehaviour
     private void OnApplicationQuit()
     {
         server.CloseAllSockets();
+    }
+
+    float Width
+    {
+        get
+        {
+#if UNITY_EDITOR
+            return 0.059f;
+#elif UNITY_ANDROID
+            return 0.0681f;
+            //using (AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            //{
+            //    using (AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity"))
+            //    {
+
+            //        using (AndroidJavaObject metrics = new AndroidJavaObject("android.util.DisplayMetrics"))
+            //        {
+            //            activity.Call<AndroidJavaObject>("getWindowManager").Call<AndroidJavaObject>("getDefaultDisplay").Call("getMetrics", metrics);
+
+            //            return metrics.Get<float>("xdpi");
+            //        }
+            //    }
+            //}
+
+#endif
+        }
     }
 }
