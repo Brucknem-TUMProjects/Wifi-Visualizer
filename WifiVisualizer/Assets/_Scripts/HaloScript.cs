@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class HaloScript : MonoBehaviour
 {
-    Light halo;
+    Renderer rend;
 
     private void Start()
     {
-        halo = GetComponent<Light>();
+        rend = GetComponent<Renderer>();
     }
 
     private void Awake()
@@ -17,9 +17,13 @@ public class HaloScript : MonoBehaviour
         Start();
     }
 
+    public void SetShader(Shader shader)
+    {
+        rend.material = new Material(shader);
+    }
+
     public void SetColor(int decibel)
     {
-
         float value = Mathf.Clamp(decibel, -80f, -30f);
         value += 30;
         value *= -1;
@@ -36,6 +40,10 @@ public class HaloScript : MonoBehaviour
             r = 255f;
             g = 255f - ((value / 25f) * 255f);
         }
-        halo.color = new Color(r, g, 0);
+
+        Color c = new Color(r / 255f, g / 255f, 0);
+        rend.material.color = c;
+
+        rend.material.SetColor("_Color", c);
     }
 }
