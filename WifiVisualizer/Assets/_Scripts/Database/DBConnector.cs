@@ -12,6 +12,8 @@ public class DBConnector : IDBConnector
     {
         base.ConnectDatabase(file);
         dbconn = new SQLiteConnection(Application.dataPath + file);
+        AddAll(Select<Location>());
+        AddAll(Select<Signal>());
     } 
     
     private void Write<T>(T value) where T : SQLable, new()
@@ -41,17 +43,24 @@ public class DBConnector : IDBConnector
 
     public override List<T> Select<T>(long timestamp = -1)
     {
-        string name = typeof(T).ToString();
-        
-        string query = "SELECT * FROM " + name;
-
-        if (timestamp != -1)
+        try
         {
-            query += " WHERE timestamp = " + timestamp;
+            string name = typeof(T).ToString();
+
+            string query = "SELECT * FROM " + name;
+
+            if (timestamp != -1)
+            {
+                query += " WHERE timestamp = " + timestamp;
+            }
+            List<T> result = dbconn.Query<T>(query);
+            Debug.Log(result.Count + " " + name.ToUpper() + "S returned");
+            return result;
         }
-        List<T> result = dbconn.Query<T>(query);
-        Debug.Log(result.Count + " " + name.ToUpper() + "S returned");
-        return result;
+        catch (Exception)
+        {
+            return new List<T>();
+        }
     }
 
     public override void ClearTables()
@@ -63,8 +72,8 @@ public class DBConnector : IDBConnector
 
     public override void CloseConnection()
     {
-        Write(locations);
-        Write(signals);
+        Write(Locations);
+        Write(Signals);
 
         dbconn.Close();
     }

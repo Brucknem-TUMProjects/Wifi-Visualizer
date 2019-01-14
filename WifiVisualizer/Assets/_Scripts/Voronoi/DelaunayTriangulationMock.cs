@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class DelaunayTriangulationMock : IDelaunayTriangulation
 {
+    public override Vector3 Centroid
+    {
+        get
+        {
+            return new Vector3(5, 5, 5);
+        }
+    }
+
     public override void Generate(List<Measurement3D> measurements)
     {
         Random.InitState(0);

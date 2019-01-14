@@ -1,7 +1,5 @@
 ﻿using SQLite4Unity3d;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Signal : SQLable, IComparable<Signal>
@@ -9,8 +7,7 @@ public class Signal : SQLable, IComparable<Signal>
     public string Mac { get; set; }
     public string Ssid { get; set; }
     public int Decibel { get; set; }
-    private Color color;
-
+   
     public Signal() : this(0, "", "", 0)
     {
 
@@ -27,7 +24,6 @@ public class Signal : SQLable, IComparable<Signal>
         this.Mac = Mac;
         this.Ssid = Name;
         this.Decibel = Decibel;
-        color = CalculateColor(this.Decibel);
     }
 
     public override string ToString()
@@ -40,9 +36,9 @@ public class Signal : SQLable, IComparable<Signal>
         return (int)(Timestamp - other.Timestamp);
     }
 
-    private Color CalculateColor(float decibel)
+    public Color GetColor()
     {
-        float value = Mathf.Clamp(decibel, -80f, -30f);
+        float value = Mathf.Clamp(Decibel, -80f, -30f);
         value += 30;
         value *= -1;
 
@@ -60,10 +56,5 @@ public class Signal : SQLable, IComparable<Signal>
         }
 
         return new Color(r / 255f, g / 255f, 0);
-    }
-
-    public Color Color()
-    {
-        return color;
     }
 }

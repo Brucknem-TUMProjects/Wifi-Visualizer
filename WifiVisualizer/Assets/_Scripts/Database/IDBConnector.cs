@@ -4,8 +4,9 @@ using UnityEngine;
 
 public abstract class IDBConnector
 {
-    protected List<Location> locations;
-    protected List<Signal> signals;
+    public List<Location> Locations { get; protected set; }
+    public List<Signal> Signals { get; protected set; }
+    public List<Measurement3D> Measurements { get; protected set; }
 
     protected bool isConnected = false;
     protected string file;
@@ -29,44 +30,85 @@ public abstract class IDBConnector
 
     public void Reset()
     {
-        locations = new List<Location>();
-        signals = new List<Signal>();
+        Locations = new List<Location>();
+        Signals = new List<Signal>();
+        Measurements = new List<Measurement3D>();
     }
 
-    public void Add(SQLable value)
+    public void Add(Location location)
     {
-        if (value.GetType() == typeof(Location))
+        Locations.Add(location);
+        UpdateMeasurements(location);
+    }
+
+    public void Add(Signal signal)
+    {
+        Signals.Add(signal);
+        UpdateMeasurements(signal);
+    }
+
+    public void Add(Measurement3D measurement)
+    {
+        Measurements.Add(measurement);
+        Signals.Add(measurement.Signal);
+        Locations.Add(measurement.Location);
+    }
+
+    public void UpdateMeasurements(Location location)
+    {
+        Measurement3D measurement = Find(location);
+
+        if (measurement != null)
         {
-            locations.Add((Location)value);
+            measurement.Location = location;
         }
-        else if (value.GetType() == typeof(Signal))
+        else
         {
-            signals.Add((Signal)value);
+            Measurements.Add(new Measurement3D(location, new Signal()));
         }
     }
 
-    public void AddAll(List<SQLable> values)
+    private Measurement3D Find(SQLable value)
     {
-        foreach (SQLable value in values)
+        foreach (Measurement3D m in Measurements)
         {
-            Add(value);
+            if (m.Timestamp == value.Timestamp)
+            {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public void UpdateMeasurements(Signal signal)
+    {
+        Measurement3D measurement = Find(signal);
+
+        if (measurement != null)
+        {
+            measurement.Signal = signal;
+        }
+        else
+        {
+            Measurements.Add(new Measurement3D(new Location(), signal));
         }
     }
 
-    public void AddAll(params SQLable[] values)
+    public void AddAll(List<Location> locations)
     {
-        AddAll(new List<SQLable>(values));
+        foreach (Location location in locations)
+        {
+            Add(location);
+        }
     }
 
-    public List<Location> GetLocations()
+    public void AddAll(List<Signal> signals)
     {
-        return locations;
+        foreach (Signal signal in signals)
+        {
+            Add(signal);
+        }
     }
-
-    public List<Signal> GetSignals()
-    {
-        return signals;
-    }
-
+    
     public abstract List<U> Select<U>(long timestamp = -1) where U : SQLable, new();
 }

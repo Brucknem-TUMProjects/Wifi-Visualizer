@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using HullDelaunayVoronoi.Primitives;
+using UnityEngine;
 
 namespace HullDelaunayVoronoi.Hull
 {
@@ -225,7 +226,6 @@ namespace HullDelaunayVoronoi.Hull
                 }
                 else extremes.Add(Buffer.InputVertices[minInd]);
             }
-
             return extremes;
         }
 

@@ -11,7 +11,7 @@ public class SQLable
 
     public SQLable()
     {
-        Timestamp = 0;
+        Timestamp = -1;
     }
 
     public string ToSqlValueList()

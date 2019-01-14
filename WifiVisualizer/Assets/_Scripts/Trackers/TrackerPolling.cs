@@ -15,36 +15,34 @@ public class TrackerPolling : MonoBehaviour
 {
     private readonly ITrackerConnector trackerConnection = new TrackerConnector();
     TrackableBehaviour trackable;
+    Material rend;
 
     long lastStarted = 0;
     readonly long deltaMillis = 100;
     //int id;
 
     IDBConnector database;
+    DelaunayTriangulator triangulator;
+    private static List<Location> tracked = new List<Location>();
 
     private void Start()
     {
         trackable = transform.GetComponent<TrackableBehaviour>();
+        rend = transform.GetChild(0).GetComponent<MeshRenderer>().material;
     }
 
 
-    public void Setup(string host, int port, int id, IDBConnector database, Action<int, float, bool> callback, Action<int> onClosed)
+    public void Setup(string host, int port, int id, IDBConnector database, DelaunayTriangulator triangulator, Action<int, float, bool> callback, Action<int> onClosed)
     {
         Debug.Log("Started Tracker: " + host + ":" + port);
         gameObject.SetActive(true);
         this.database = database;
-        //this.onClosed = onClosed;
-        //this.id = id;
+        this.triangulator = triangulator;
         trackerConnection.ConnectServer(host, port, id, callback, onClosed);
     }
 
     private void FixedUpdate()
     {
-        //if (actions.Count > 0)
-        //{
-        //    actions.Dequeue()();
-        //}
-
         if (IsTracked && (Environment.TickCount - lastStarted) > deltaMillis)
         {
             long timestamp = Environment.TickCount;
@@ -54,10 +52,17 @@ public class TrackerPolling : MonoBehaviour
                 Location location = new Location(timestamp,
                                                             transform.position.x,
                                                             transform.position.y,
-                                                            transform.position.z,
-                                                            transform.rotation.eulerAngles.x,
-                                                            transform.rotation.eulerAngles.y,
-                                                            transform.rotation.eulerAngles.z);
+                                                            transform.position.z
+                                                           );
+                foreach(Location other in tracked)
+                {
+                    if(Vector3.Distance(other, location) < 0.25f)
+                    {
+                        return;
+                    }
+                }
+                tracked.Add(location);
+                StartCoroutine(Flash());
                 Request(location, timestamp);
             }
             catch { };
@@ -67,6 +72,12 @@ public class TrackerPolling : MonoBehaviour
             Remove();
         }
     }
+    private IEnumerator Flash()
+    {
+        rend.color = Color.red;
+        yield return new WaitForSeconds(1);
+        rend.color = Color.green;
+    }
 
     private void Request(Location location, long timestamp)
     {
@@ -75,10 +86,10 @@ public class TrackerPolling : MonoBehaviour
             Signal signal = trackerConnection.RequestServer(timestamp);
             if (signal != null)
             {
-                database.Add(signal);
-                database.Add(location);
+                database.Add(new Measurement3D(location, signal));
             }
         }).Start();
+        triangulator.Recalculate();
     }
 
 

@@ -1,58 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using HullDelaunayVoronoi.Delaunay;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DelaunayTriangulator : MonoBehaviour{
 
     public MonoTetrahedron prefab;
-    private IList<Tetrahedron> tetrahedrons;
     private IDelaunayTriangulation triangulation;
-    private IDBConnector database;
-    private List<Measurement3D> measurements;
+    public IDBConnector database;
 
     void Start()
     {
-        database = new DBConnectorMock();
-        database.ConnectDatabase("/Database/database.db");
-        CreateMeasurements();
-        Initialize();
+        if(SceneManager.GetActiveScene().name == "EditorView")
+        {
+            database = new DBConnector();
+            database.ConnectDatabase("/Database/database.db");
+            Initialize(database);
+        }
     }
 
-    public void Initialize()
+    private void SetDatabase(IDBConnector dBConnector)
     {
-        triangulation = new DelaunayTriangulationMock();
-        triangulation.Generate(measurements);
-        GameObject spinner = new GameObject("Spinner");
-        //spinner.transform.position = new Vector3(triangulation.Centroid.X, triangulation.Centroid.Y, triangulation.Centroid.Z);
-        //this.transform.parent = spinner.transform;
+        database = dBConnector;
+    }
+
+    public void Initialize(IDBConnector dBConnector)
+    {
+        SetDatabase(dBConnector);
+        Recalculate();
+    }
+
+    public void Recalculate()
+    {
+        Debug.Log(database.Measurements.Count);
+        triangulation = new DelaunayTriangulation();
+        triangulation.Generate(database.Measurements);
+        //GameObject spinner = new GameObject("Spinner");
+        //spinner.transform.position = new Vector3(triangulation.Centroid.x, triangulation.Centroid.y, triangulation.Centroid.z);
+        //transform.parent = spinner.transform;
         //spinner.AddComponent<Spin>();
         CreateMonoTetrahedrons();
-    }
-
-    private void CreateMeasurements()
-    {
-        List<Location> locations = database.Select<Location>();
-        List<Signal> signals = database.Select<Signal>();
-        locations.Sort();
-        signals.Sort();
-        Queue<Location> locationQueue = new Queue<Location>(locations);
-        Queue<Signal> signalQueue = new Queue<Signal>(signals);
-
-        measurements = new List<Measurement3D>();
-
-        while (locationQueue.Count > 0)
-        {
-            Location location = locationQueue.Dequeue();
-            while (signalQueue.Count > 0)
-            {
-                Signal signal = signalQueue.Dequeue();
-                if (location.Timestamp == signal.Timestamp)
-                {
-                    measurements.Add(new Measurement3D(location, signal));
-                    break;
-                }
-            }
-        }
     }
 
     private void CreateMonoTetrahedrons()

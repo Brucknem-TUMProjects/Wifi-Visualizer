@@ -23,6 +23,8 @@ public class TrackerManager : MonoBehaviour {
 
     Queue<Action> actions = new Queue<Action>();
 
+    public DelaunayTriangulator triangulator;
+
     private void Start()
     {
         connectedTrackers = new Dictionary<int, TrackerPolling>();
@@ -30,6 +32,8 @@ public class TrackerManager : MonoBehaviour {
         database = new DBConnector();
         database.ConnectDatabase("/Database/database.db");
         database.ClearTables();
+
+        triangulator.Initialize(database);
 
         connect.onClick.AddListener(CreateTracker);
     }
@@ -65,7 +69,8 @@ public class TrackerManager : MonoBehaviour {
         RectTransform trackerView = Instantiate(trackerViewPrefab);
 
         trackerTarget.gameObject.SetActive(true);
-        trackerTarget.Setup(host, port, id, database, ConnectionSuccessful, Remove);
+        trackerTarget.Setup(host, port, id, database, triangulator,
+            ConnectionSuccessful, Remove);
         connectedTrackers.Add(id, trackerTarget);
 
         trackerView.SetParent(listView);

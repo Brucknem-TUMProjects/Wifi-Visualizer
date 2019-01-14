@@ -409,6 +409,47 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 306383319}
   m_CullTransparentMesh: 0
+--- !u!1 &568166000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 568166002}
+  - component: {fileID: 568166001}
+  m_Layer: 0
+  m_Name: Delauney
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &568166001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 568166000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aabab9d5586d6547b5ec65d58f0c77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 114205723856104428, guid: a86e82a46094e41498af4f1d53a77a6a, type: 2}
+--- !u!4 &568166002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 568166000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &696924137
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,6 +878,7 @@ MonoBehaviour:
   portIF: {fileID: 12158956}
   connect: {fileID: 696924140}
   dataset: {fileID: 1585959800}
+  triangulator: {fileID: 568166001}
 --- !u!4 &972499795
 Transform:
   m_ObjectHideFlags: 0
@@ -1339,7 +1381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2af71ee6307b94ebe27cc49fbdcb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: {fileID: 1839580279520782, guid: ec10330b656d1784693161bcfb2d489a, type: 2}
+  Model: {fileID: 1980043845896910, guid: ec10330b656d1784693161bcfb2d489a, type: 2}
 --- !u!4 &1585959801
 Transform:
   m_ObjectHideFlags: 0

@@ -44,22 +44,23 @@ public class MonoTetrahedron : MonoBehaviour {
             }
         }
 
-        foreach (Vector3 vertex in tetrahedron.Vertices)
+        foreach (Measurement3D vertex in tetrahedron.Measurements)
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            obj.transform.localPosition = vertex;
+            obj.transform.localPosition = vertex.Location;
             obj.transform.localScale = Vector3.one * minDistance * 0.05f;
             obj.transform.parent = transform;
+            obj.GetComponent<MeshRenderer>().material.color = vertex.Color;
         }
     }
 
     public void OnDrawGizmos()
     {
-        for (int i = 0; i < tetrahedron.Triangles.Count; i += 3)
-        {
-            Vector3 normal = tetrahedron.CalculateNormal(tetrahedron.Triangles[i], tetrahedron.Triangles[i + 1], tetrahedron.Triangles[i + 2]);
-            Vector3 centroid = (tetrahedron.Vertices[tetrahedron.Triangles[i]] + tetrahedron.Vertices[tetrahedron.Triangles[i + 1]] + tetrahedron.Vertices[tetrahedron.Triangles[i + 2]]) / 3;
-            Gizmos.DrawRay(centroid, normal);
-        }
+        //for (int i = 0; i < tetrahedron.Triangles.Count; i += 3)
+        //{
+        //    Vector3 normal = tetrahedron.CalculateNormal(tetrahedron.Triangles[i], tetrahedron.Triangles[i + 1], tetrahedron.Triangles[i + 2]);
+        //    Vector3 centroid = (tetrahedron.Vertices[tetrahedron.Triangles[i]] + tetrahedron.Vertices[tetrahedron.Triangles[i + 1]] + tetrahedron.Vertices[tetrahedron.Triangles[i + 2]]) / 3;
+        //    Gizmos.DrawLine(centroid, centroid + 3 * normal.normalized);
+        //}
     }
 }

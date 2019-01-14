@@ -8,7 +8,7 @@ public class DBConnectorMock : IDBConnector
     {
         base.ConnectDatabase(file);
         Random.InitState(0);
-        CubeCloud();
+        RandomCloud();
     }
 
     private void CubeCloud()
@@ -19,8 +19,8 @@ public class DBConnectorMock : IDBConnector
             {
                 for (int k = 0; k < 2; k++)
                 {
-                    signals.Add(new Signal(i + 10 * j + 100 * k, "", "", -Random.Range(30,80)));
-                    locations.Add(new Location(i + 10 * j + 100 * k, i * 10, j * 10, k * 10));
+                    Signals.Add(new Signal(i + 10 * j + 100 * k, "", "", -Random.Range(30,80)));
+                    Locations.Add(new Location(i + 10 * j + 100 * k, i * 10, j * 10, k * 10));
                 }
             }
         }
@@ -30,8 +30,8 @@ public class DBConnectorMock : IDBConnector
     {
         for (int i = 0; i < 100; i++)
         {
-            signals.Add(new Signal(i, "", "", -Random.Range(30, 80)));
-            locations.Add(new Location(i, Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10)));
+            Signals.Add(new Signal(i, "", "", -Random.Range(30, 80)));
+            Locations.Add(new Location(i, Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10)));
         }
     }
 
@@ -40,11 +40,11 @@ public class DBConnectorMock : IDBConnector
         T value = new T();
         if (value.GetType() == typeof(Location))
         {
-            return locations as List<T>;
+            return Locations as List<T>;
         }
         else if (value.GetType() == typeof(Signal))
         {
-            return signals as List<T>;
+            return Signals as List<T>;
         }
         return new List<T>();
     }

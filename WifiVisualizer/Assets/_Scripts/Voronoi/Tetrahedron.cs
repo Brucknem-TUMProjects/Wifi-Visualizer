@@ -37,6 +37,15 @@ public class Tetrahedron
 
     private void CalculateTriangle(int p1, int p2, int p3, int vv)
     {
+        //Triangles.AddRange(new int[] {
+        //    0,1,2,
+        //    0,2,1,
+        //    0,1,3,
+        //    0,3,1,
+        //    0,2,3,
+        //    0,3,2,
+        //    1,2,3,
+        //    1,3,2 });
         Vector3 normal = CalculateNormal(p1, p2, p3);
         Vector3 v = Vertices[vv];
 

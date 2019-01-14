@@ -2,20 +2,17 @@
 {
 	Properties
 	{
-		_Transparency("Transparency", Range(0,1)) = 0.2
 	}
+
 	SubShader
 	{
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
-		Blend SrcAlpha OneMinusSrcAlpha
-		//Cull Off
-		ZWrite Off
+		Tags { "Queue" = "Geometry"}
 
 		Pass
 		{
 			CGPROGRAM
-			#pragma vertex vert alpha:fade
-			#pragma fragment frag alpha:fade
+			#pragma vertex vert
+			#pragma fragment frag 
 
 			#include "UnityCG.cginc"
 
@@ -29,8 +26,6 @@
 				fixed4 color : COLOR;
 			};
 
-			float _Transparency;
-			
 			v2f vert(appdata v)
 			{
 				v2f o;
@@ -43,7 +38,6 @@
 			{
 				// sample the texture
 				fixed4 col = i.color;
-				col.a = _Transparency;
 				return col;
 			}
 			ENDCG
