@@ -115,7 +115,7 @@ public class DatasetLoader : MonoBehaviour
 
                 // Add a Trackable event handler to the Trackable.
                 // This Behaviour handles Trackable lost/found callbacks.
-                go.AddComponent<DefaultTrackableEventHandler>();
+                //go.AddComponent<TrackableBehaviour>();
                 TrackerPolling tp = go.AddComponent<TrackerPolling>();
 
                 // Instantiate the model.
