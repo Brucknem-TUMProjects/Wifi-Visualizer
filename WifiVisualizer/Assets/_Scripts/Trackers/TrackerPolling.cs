@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using Vuforia;
-using UnityEditor;
-using UnityEngine.UI;
 
 public class TrackerPolling : MonoBehaviour
 {
@@ -81,6 +75,7 @@ public class TrackerPolling : MonoBehaviour
 
     private void Request(Location location, long timestamp)
     {
+#if UNITY_EDITOR
         new Thread(() =>
         {
             Signal signal = trackerConnection.RequestServer(timestamp);
@@ -90,6 +85,7 @@ public class TrackerPolling : MonoBehaviour
             }
         }).Start();
         triangulator.Recalculate();
+#endif
     }
 
 

@@ -1,19 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using UnityEngine.Playables;
+using System.Net;
+using System.Net.Sockets;
+
 
 public class TrackerConnector : ITrackerConnector
 {
+#if UNITY_EDITOR
     /** Pi server socket */
     private Socket _clientSocket;
-    
+#endif
     /** Request counter */
     private int threadsRunning = 0;
 
@@ -39,16 +37,16 @@ public class TrackerConnector : ITrackerConnector
      */
     public override void ConnectServer(string host, int port, int id, Action<int, float, bool> onFinish, Action<int> onClosed)
     {
+#if UNITY_EDITOR
+
         Debug.Log("Creating new Thread with ConnectToServerThread()");
-        _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        //this.host = host;
-        //this.port = port;
         this.id = id;
-        //this.onFinish = onFinish;
         this.onClosed = onClosed;
+        _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         ParameterizedThreadStart start = delegate { ConnectServerThread(host, port, id, onFinish); };
         Thread connectThread = new Thread(start);
         connectThread.Start();
+#endif
     }
 
     /**
@@ -57,6 +55,8 @@ public class TrackerConnector : ITrackerConnector
      */
     private void ConnectServerThread(string host, int port, int id, Action<int, float, bool> onFinish)
     {
+#if UNITY_EDITOR
+
         if (threadsRunning > 10) {
             onFinish(id, 0, false);
             return;
@@ -93,6 +93,7 @@ public class TrackerConnector : ITrackerConnector
         }
         threadsRunning--;
         connecting = false;
+#endif
     }
 
     /// <summary>
@@ -106,8 +107,10 @@ public class TrackerConnector : ITrackerConnector
     override
     public string RequestServer(string message)
     {
-        Debug.Log("Started request!");
         string response = "";
+
+#if UNITY_EDITOR
+        Debug.Log("Started request!");
 
         try
         {
@@ -134,6 +137,7 @@ public class TrackerConnector : ITrackerConnector
 
         Debug.Log("Received: " + response);
 
+#endif
         return response;
     }
 
@@ -147,16 +151,20 @@ public class TrackerConnector : ITrackerConnector
 
     public override bool IsConnected()
     {
+#if UNITY_EDITOR
         try
         {
             return connecting || !(_clientSocket.Poll(1, SelectMode.SelectRead) && _clientSocket.Available == 0);
         }
-        catch (Exception) { return false; }
+        catch (Exception) { }
+#endif
+        return false;
     }
 
     override
     public void CloseConnection(string message = "")
     {
+#if UNITY_EDITOR
         try
         {
             _clientSocket.Shutdown(SocketShutdown.Both);
@@ -178,5 +186,6 @@ public class TrackerConnector : ITrackerConnector
         onClosed(id);
 
         Debug.Log("Connection closed: " + message);
+#endif
     }
 }
