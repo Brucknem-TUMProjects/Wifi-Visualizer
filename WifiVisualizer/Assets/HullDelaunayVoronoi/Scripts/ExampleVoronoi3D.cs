@@ -23,34 +23,18 @@ namespace HullDelaunayVoronoi
         private VoronoiMesh3 voronoi;
         private List<Mesh> meshes;
 
-        public DBConnector database;
-        List<Location> locations;
-            List<Signal> signals;
-
         private void Start()
         {
-            database = new DBConnector();
-            database.ConnectDatabase("/Database/database.db");
-
-            locations = database.Select<Location>();
-            signals = database.Select<Signal>();
-
-            Debug.Log(locations + "" + signals);
-           
             lineMaterial = new Material(Shader.Find("Hidden/Internal-Colored"));
 
-            Vertex3[] vertices = new Vertex3[locations.Count];
+            Vertex3[] vertices = new Vertex3[NumberOfVertices];
 
             Random.InitState(seed);
-            for (int i = 0; i < locations.Count; i++)
+            for (int i = 0; i < NumberOfVertices; i++)
             {
-                //float x = size * Random.Range(-1.0f, 1.0f);
-                //float y = size * Random.Range(-1.0f, 1.0f);
-                //float z = size * Random.Range(-1.0f, 1.0f);
-
-                float x = locations[i].PosX;
-                float y = locations[i].PosY;
-                float z = locations[i].PosZ;
+                float x = size * Random.Range(-1.0f, 1.0f);
+                float y = size * Random.Range(-1.0f, 1.0f);
+                float z = size * Random.Range(-1.0f, 1.0f);
 
                 vertices[i] = new Vertex3(x, y, z);
             }

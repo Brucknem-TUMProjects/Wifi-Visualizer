@@ -22,9 +22,9 @@ public class TrackerConnectorMock : ITrackerConnector
         return true;
     }
 
-    public override Signal RequestServer(long timestamp)
+    public override Signal RequestServer()
     {
-        return ParseResponse(timestamp, RequestServer("Yeet me dbsss"));
+        return ParseResponse(RequestServer("Yeet me dbsss"));
     }
 
     public override string RequestServer(string message)

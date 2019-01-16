@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class DelaunayTriangulationMock : IDelaunayTriangulation
 {
-    public override Vector3 Centroid
+    public DelaunayTriangulationMock() : base() { }
+
+    public override void Add(Measurement3D measurement)
     {
-        get
-        {
-            return new Vector3(5, 5, 5);
-        }
+    }
+
+    public override void AddAll(List<Measurement3D> measurement)
+    {
     }
 
     public override void Generate(List<Measurement3D> measurements)
@@ -25,10 +27,7 @@ public class DelaunayTriangulationMock : IDelaunayTriangulation
             {
                 for (int k = 0; k < 2; k++)
                 {
-                    Measurements.Add(new Measurement3D(
-                        new Location(i + 10 * j + 100 * k, i * 10, j * 10, k * 10),
-                        new Signal(i + 10 * j + 100 * k, "", "", -Random.Range(30, 80)))
-                        );
+                    Add(new Measurement3D(i * 10, j * 10, k * 10));
                 }
             }
         }
@@ -39,5 +38,9 @@ public class DelaunayTriangulationMock : IDelaunayTriangulation
         Triangulation.Add(new Tetrahedron(Measurements[0], Measurements[4], Measurements[5], Measurements[7]));
         Triangulation.Add(new Tetrahedron(Measurements[0], Measurements[2], Measurements[6], Measurements[7]));
         Triangulation.Add(new Tetrahedron(Measurements[0], Measurements[4], Measurements[6], Measurements[7]));
+    }
+
+    protected override void UpdateExtremes(Measurement3D measurement)
+    {
     }
 }

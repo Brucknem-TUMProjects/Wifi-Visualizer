@@ -1,4 +1,4 @@
-﻿Shader "Unlit/Tetrahedron"
+﻿Shader "Custom/Tetrahedron"
 {
 	Properties
 	{
@@ -7,7 +7,7 @@
 
 	SubShader
 	{
-		Tags { "Queue" = "Geometry-1"}
+		Tags { "Queue" = "Transparent" "RenderType" = "Transparent"}
 		Blend SrcAlpha OneMinusSrcAlpha
 		ZWrite off
 		Cull front

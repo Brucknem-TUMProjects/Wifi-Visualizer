@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 using UnityEngine;
 using HullDelaunayVoronoi.Primitives;
 
 public class Tetrahedron
 {
     public List<Measurement3D> Measurements { get; private set; }
-    public List<int> Triangles { get; private set; }
-    public List<Vector3> Vertices { get; private set; }
-    public List<Triangle> Edges { get; private set; }
+    public List<int> Indices { get; private set; }
+    public List<Triangle> Triangles { get; private set; }
     public CircumSphere CircumSphere { get; private set; }
-
+    public bool IsArtificial { get; private set; }
 
     public Tetrahedron(Measurement3D a, Measurement3D b, Measurement3D c, Measurement3D d)
     {
@@ -18,75 +18,63 @@ public class Tetrahedron
         {
             a,b,c,d
         };
-        CalculateVertices();
-        CalculateTriangles();
-        CalculateEdges();
-        CircumSphere = new CircumSphere(Vertices);
+        CalculateIndices();
+        CalculateArtificial();
+        CircumSphere = new CircumSphere(Measurements);
     }
 
     public Tetrahedron(params Measurement3D[] measurements) : this(measurements[0], measurements[1], measurements[2], measurements[3]) { }
 
-    private void CalculateVertices()
+    public List<Vector3> Vectors
     {
-        Vertices = new List<Vector3>();
-        foreach (Vertex3 vertex in Measurements)
+        get
         {
-            Vertices.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
+            List<Vector3> vectors = new List<Vector3>();
+            foreach(Measurement3D measurement in Measurements)
+            {
+                vectors.Add(measurement);
+            }
+            return vectors;
         }
     }
-    private void CalculateTriangles()
-    {
-        Triangles = new List<int>();
-        CalculateTriangle(0, 1, 2, 3);
-        CalculateTriangle(0, 1, 3, 2);
-        CalculateTriangle(0, 2, 3, 1);
-        CalculateTriangle(3, 1, 2, 0);
-    }
-    private void CalculateTriangle(int p1, int p2, int p3, int vv)
-    {
-        //Triangles.AddRange(new int[] {
-        //    0,1,2,
-        //    0,2,1,
-        //    0,1,3,
-        //    0,3,1,
-        //    0,2,3,
-        //    0,3,2,
-        //    1,2,3,
-        //    1,3,2 });
-        Vector3 normal = CalculateNormal(p1, p2, p3);
-        Vector3 v = Vertices[vv];
 
-        float dotp = Vector3.Dot(normal, v - Vertices[p1]);
-        Triangles.Add(p1);
-        if (dotp < 0)
+    private void CalculateIndices()
+    {
+        Indices = new List<int>();
+        Triangles = new List<Triangle>();
+        CalculateIndices(0, 1, 2, 3);
+        CalculateIndices(0, 1, 3, 2);
+        CalculateIndices(0, 2, 3, 1);
+        CalculateIndices(3, 1, 2, 0);
+    }
+    private void CalculateIndices(int p1, int p2, int p3, int vv)
+    {
+        Triangle triangle= new Triangle(Measurements[p1], Measurements[p2], Measurements[p3]);
+        Triangles.Add(triangle);
+        
+        Vector3 v = Measurements[vv];
+
+        float dotp = Vector3.Dot(triangle.Normal, v - Measurements[p1]);
+        Indices.Add(p1);
+        if (dotp > 0)
         {
-            Triangles.Add(p2);
-            Triangles.Add(p3);
+            Indices.Add(p2);
+            Indices.Add(p3);
         }
         else
         {
-            Triangles.Add(p3);
-            Triangles.Add(p2);
+            Indices.Add(p3);
+            Indices.Add(p2);
         }
     }
-    public void CalculateEdges()
-    {
-        Edges.Add(new Triangle(Measurements[0], Measurements[1], Measurements[2]));
-        Edges.Add(new Triangle(Measurements[0], Measurements[1], Measurements[3]));
-        Edges.Add(new Triangle(Measurements[0], Measurements[2], Measurements[3]));
-        Edges.Add(new Triangle(Measurements[1], Measurements[2], Measurements[3]));
-    }
-    public Vector3 CalculateNormal(int p1, int p2, int p3)
-    {
-        return Vector3.Cross(Vertices[p2] - Vertices[p1], Vertices[p3] - Vertices[p1]);
-    }
+
     public static float Volume(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
     {
         return Vector3.Dot(Vector3.Cross(b - a, c - a), d - a) / 6f;
     }
     public static float Volume(Measurement3D a, Measurement3D b, Measurement3D c, Vector3 d)
     {
-        return Volume(a.Location.GetPosition(), b.Location.GetPosition(), c.Location.GetPosition(), d);
+        return Volume(a.Position, b.Position, c.Position, d);
     }
     public Color BarycentricInterpolation(Vector3 measurement)
     {
@@ -109,6 +97,20 @@ public class Tetrahedron
     }
     public bool Includes(Measurement3D measurement)
     {
-        return CircumSphere.Includes(measurement.Location);
+        return CircumSphere.Includes(measurement.Position);
     }
+
+    public void CalculateArtificial()
+    {
+        IsArtificial = false;
+        foreach(Measurement3D measurement in Measurements)
+        {
+            if (measurement.IsArtificial)
+            {
+                IsArtificial = true;
+                return;
+            }
+        }
+    }
+
 }

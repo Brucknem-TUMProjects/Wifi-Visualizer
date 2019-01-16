@@ -13,11 +13,8 @@ public class TrackerPolling : MonoBehaviour
 
     long lastStarted = 0;
     readonly long deltaMillis = 100;
-    //int id;
 
-    IDBConnector database;
-    DelaunayTriangulator triangulator;
-    private static List<Location> tracked = new List<Location>();
+    private static List<Vector3> tracked = new List<Vector3>();
 
     private void Start()
     {
@@ -26,12 +23,10 @@ public class TrackerPolling : MonoBehaviour
     }
 
 
-    public void Setup(string host, int port, int id, IDBConnector database, DelaunayTriangulator triangulator, Action<int, float, bool> callback, Action<int> onClosed)
+    public void Setup(string host, int port, int id, Action<int, float, bool> callback, Action<int> onClosed)
     {
         Debug.Log("Started Tracker: " + host + ":" + port);
         gameObject.SetActive(true);
-        this.database = database;
-        this.triangulator = triangulator;
         trackerConnection.ConnectServer(host, port, id, callback, onClosed);
     }
 
@@ -43,21 +38,17 @@ public class TrackerPolling : MonoBehaviour
             lastStarted = timestamp;
             try
             {
-                Location location = new Location(timestamp,
-                                                            transform.position.x,
-                                                            transform.position.y,
-                                                            transform.position.z
-                                                           );
-                foreach(Location other in tracked)
+                Vector3 position = transform.position;
+                foreach(Vector3 other in tracked)
                 {
-                    if(Vector3.Distance(other, location) < 0.25f)
+                    if(Vector3.Distance(other, position) < 0.25f)
                     {
                         return;
                     }
                 }
-                tracked.Add(location);
+                tracked.Add(position);
                 StartCoroutine(Flash());
-                Request(location, timestamp);
+                Request(position, timestamp);
             }
             catch { };
         }
@@ -73,18 +64,17 @@ public class TrackerPolling : MonoBehaviour
         rend.color = Color.green;
     }
 
-    private void Request(Location location, long timestamp)
+    private void Request(Vector3 location, long timestamp)
     {
 #if UNITY_EDITOR
         new Thread(() =>
         {
-            Signal signal = trackerConnection.RequestServer(timestamp);
+            Signal signal = trackerConnection.RequestServer();
             if (signal != null)
             {
-                database.Add(new Measurement3D(location, signal));
+                DelaunayTriangulator.Instance.Add(new Measurement3D(location, signal));
             }
         }).Start();
-        triangulator.Recalculate();
 #endif
     }
 

@@ -9,35 +9,63 @@ public abstract class IDelaunayTriangulation
 {
     public List<Tetrahedron> Triangulation { get; protected set; }
     public List<Measurement3D> Measurements { get; protected set; }
-    public List<Vector3> Extremes { get; protected set; }
-
+    public float[,] Extremes { get; protected set; }
+    
     public IDelaunayTriangulation()
     {
-        Triangulation = new List<Tetrahedron>();
-        Measurements = new List<Measurement3D>();
-        Extremes = new List<Vector3>();
+        Init();
+    }
+    
+    private Tetrahedron SuperTetrahedron
+    {
+        get
+        {
+            return new Tetrahedron(
+                new Measurement3D(0f, 0f, -100f, true),
+                new Measurement3D(-1000, -1000, 1000, true),
+                new Measurement3D(1000, -1000, 1000, true),
+                new Measurement3D(0, 1000, 1000, true)
+                );
+        }
     }
 
-    private void CalculateExtremes()
+    protected void Init()
     {
-        float[] xx = {Measurements.Min(m => m.Position[0]), Measurements.Max(m => m.Position[0])};
-        float[] yy = {Measurements.Min(m => m.Position[1]), Measurements.Max(m => m.Position[1])};
-        float[] zz = {Measurements.Min(m => m.Position[2]), Measurements.Max(m => m.Position[2])};
-        Extremes = new List<Vector3>();
+        Measurements = new List<Measurement3D>();
+        InitTriangulation();
+        InitExtremes();
+    }
 
-        for(int x = 0; x < xx.Length; x++)
+    private void InitTriangulation()
+    {
+        Triangulation = new List<Tetrahedron>
         {
-            for (int y = 0; y < yy.Length; y++)
-            {
-                for (int z = 0; z < zz.Length; z++)
-                {
-                    Extremes.Add(new Vector3(xx[x], yy[y], zz[z]));
-                }
-            }
+            SuperTetrahedron
+        };
+    }
+
+    private void InitExtremes()
+    {
+        Extremes = new float[3, 2];
+        for (int i = 0; i < Extremes.GetLength(0); i++)
+        {
+            Extremes[i, 0] = float.MaxValue;
+            Extremes[i, 1] = float.MinValue;
         }
     }
 
     public abstract void Generate(List<Measurement3D> measurements);
+    public abstract void Add(Measurement3D measurement);
+    public abstract void AddAll(List<Measurement3D> measurement);
+    protected abstract void UpdateExtremes(Measurement3D measurement);
 
-    public abstract Vector3 Centroid { get; }
+    public float AverageDistance
+    {
+        get
+        {
+            Vector3 all = Vector3.one;
+            Measurements.ForEach(m => all += m);
+            return (all / Measurements.Count).magnitude;
+        }
+    }
 }

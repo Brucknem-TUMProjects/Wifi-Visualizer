@@ -4,25 +4,31 @@ using UnityEngine;
 
 public class MonoTetrahedron : MonoBehaviour {
 
-    public Shader shader;
     Tetrahedron tetrahedron;
 
     public void Initialize(Tetrahedron tetrahedron)
     {
+        if (tetrahedron.IsArtificial)
+        {
+            Destroy(gameObject);
+        }
         this.tetrahedron = tetrahedron;
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
+        MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
         meshFilter.mesh = new Mesh()
         {
-            vertices = tetrahedron.Vertices.ToArray(),
-            triangles = tetrahedron.Triangles.ToArray()
+            vertices = tetrahedron.Vectors.ToArray(),
+            triangles = tetrahedron.Indices.ToArray()
         };
+        meshFilter.mesh.RecalculateBounds();
+        meshFilter.mesh.RecalculateNormals();
+        meshFilter.mesh.RecalculateTangents();
         List<Color> colors = new List<Color>();
         foreach (Measurement3D measurement in tetrahedron.Measurements)
         {
             colors.Add(measurement.Color);
         }
         meshFilter.mesh.colors = colors.ToArray();
-        GetComponent<MeshRenderer>().material = new Material(shader);
+        gameObject.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Custom/Tetrahedron"));
     }
     
     public void OnDrawGizmos()
@@ -33,5 +39,13 @@ public class MonoTetrahedron : MonoBehaviour {
         //    Vector3 centroid = (tetrahedron.Vertices[tetrahedron.Triangles[i]] + tetrahedron.Vertices[tetrahedron.Triangles[i + 1]] + tetrahedron.Vertices[tetrahedron.Triangles[i + 2]]) / 3;
         //    Gizmos.DrawLine(centroid, centroid + 3 * normal.normalized);
         //}
+    }
+    
+    public override int GetHashCode()
+    {
+        var hashCode = 570353101;
+        hashCode = hashCode * -1521134295 + base.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<Tetrahedron>.Default.GetHashCode(tetrahedron);
+        return hashCode;
     }
 }

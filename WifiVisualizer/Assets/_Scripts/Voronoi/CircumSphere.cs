@@ -12,7 +12,9 @@ public class CircumSphere {
     private float dz;
     private float c;
 
-    public CircumSphere(params Vector3[] vectors)
+    private float[,] matrix_buffer = new float[4, 4];
+
+        public CircumSphere(params Vector3[] vectors)
     {
         if(vectors.Length != 4)
         {
@@ -29,7 +31,7 @@ public class CircumSphere {
 
     public CircumSphere(List<Vector3> vectors) : this(vectors.ToArray()) { }
 
-    private float[,] matrix_buffer = new float[4, 4];
+    public CircumSphere(List<Measurement3D> vectors) : this(vectors[0], vectors[1], vectors[2], vectors[3]) { }
 
     private float Determinant()
     {

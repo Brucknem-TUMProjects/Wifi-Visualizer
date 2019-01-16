@@ -6,119 +6,123 @@ using System.Linq;
 public class DelaunayTriangulation : IDelaunayTriangulation
 {
     public DelaunayTriangulation() : base() { }
-
-    public override Vector3 Centroid
+    
+    public override void Add(Measurement3D measurement)
     {
-        get
+        Measurements.Add(measurement);
+        UpdateExtremes(measurement);
+
+        //      badTriangles:= empty set
+        List<Tetrahedron> badTetrahedrons = new List<Tetrahedron>();
+        //   for each triangle in triangulation do // first find all the triangles that are no longer valid due to the insertion
+        foreach (Tetrahedron tetrahedron in Triangulation)
         {
-            Vector3 sum = Vector3.zero;
-            if(Measurements.Count == 0)
+            //          if point is inside circumcircle of triangle
+            if (tetrahedron.Includes(measurement))
             {
-                return sum;
+                //         add triangle to badTriangles
+                badTetrahedrons.Add(tetrahedron);
             }
-            foreach(Measurement3D measurement in Measurements)
+        }
+        //   polygon := empty set
+        List<Triangle> polygon = new List<Triangle>();
+        //   for each triangle in badTriangles do // find the boundary of the polygonal hole
+        foreach (Tetrahedron tetrahedron in badTetrahedrons)
+        {
+            //          for each edge in triangle do
+            foreach (Triangle triangle in tetrahedron.Triangles)
             {
-                sum += measurement.Location;
+                //                  if edge is not shared by any other triangles in badTriangles
+                if (!EdgeInBadTriangles(badTetrahedrons.Where(t => !t.Equals(tetrahedron)), triangle))
+                {
+                    //                     add edge to polygon
+                    polygon.Add(triangle);
+                }
             }
-            return sum / Measurements.Count;
+        }
+        //   for each triangle in badTriangles do // remove them from the data structure
+        foreach (Tetrahedron tetrahedron in badTetrahedrons)
+        {
+            //          remove triangle from triangulation
+            Triangulation.Remove(tetrahedron);
+        }
+        //   for each edge in polygon do // re-triangulate the polygonal hole
+        foreach (Triangle triangle in polygon)
+        {
+            //      newTri:= form a triangle from edge to point
+            //     add newTri to triangulation
+            if (triangle.InSamePlane(measurement))
+            {
+                Debug.Log("In same plane");
+                continue;
+            }
+            Triangulation.Add(
+                new Tetrahedron(
+                    measurement,
+                    triangle.Measurements[0],
+                    triangle.Measurements[1],
+                    triangle.Measurements[2]));
+        }
+    }
+
+    protected override void UpdateExtremes(Measurement3D measurement)
+    {
+        float[] pos = measurement.PositionArray;
+
+        for (int i = 0; i < Extremes.GetLength(0); i++)
+        {
+            if (pos[i] < Extremes[i, 0])
+            {
+                Extremes[i, 0] = pos[i];
+            }
+            if (pos[i] > Extremes[i, 1])
+            {
+                Extremes[i, 1] = pos[i];
+            }
         }
     }
 
     public override void Generate(List<Measurement3D> measurements)
     {
-        Measurements = measurements;
-        DelaunayTriangulation3<Measurement3D> triangulation = new DelaunayTriangulation3<Measurement3D>();
-        triangulation.Generate(measurements);
-        foreach (DelaunayCell<Measurement3D> cell in triangulation.Cells)
-        {
-            Triangulation.Add(new Tetrahedron(cell.Simplex.Vertices));
-        }
-    }
-
-    public void BowyerWatson()
-    {
         //triangulation:= empty triangle mesh data structure
         //add super-triangle to triangulation // must be large enough to completely contain all the points in pointList
-        Triangulation.Add(SuperTetrahedron);
+        Init();
         //for each point in pointList do // add all the points one at a time to the triangulation
-        foreach (Measurement3D measurement in Measurements)
-        {
-            //      badTriangles:= empty set
-            List<Tetrahedron> badTetrahedrons = new List<Tetrahedron>();
-            //   for each triangle in triangulation do // first find all the triangles that are no longer valid due to the insertion
-            foreach (Tetrahedron tetrahedron in Triangulation)
-            {
-                //          if point is inside circumcircle of triangle
-                if (tetrahedron.Includes(measurement))
-                {
-                    //         add triangle to badTriangles
-                    badTetrahedrons.Add(tetrahedron);
-                }
-            }
-            //   polygon := empty set
-            List<Triangle> polygon = new List<Triangle>();
-            //   for each triangle in badTriangles do // find the boundary of the polygonal hole
-            foreach (Tetrahedron tetrahedron in badTetrahedrons)
-            {
-                //          for each edge in triangle do
-                foreach (Triangle edge in tetrahedron.Edges)
-                {
-                    //                  if edge is not shared by any other triangles in badTriangles
-                    if (!EdgeInBadTriangles(badTetrahedrons.Where(t => !t.Equals(tetrahedron)), edge))
-                    {
-                        //                     add edge to polygon
-                        polygon.Add(edge);
-                    }
-                }
-            }
-            //   for each triangle in badTriangles do // remove them from the data structure
-            foreach (Tetrahedron tetrahedron in badTetrahedrons)
-            {
-                //          remove triangle from triangulation
-                Triangulation.Remove(tetrahedron);
-            }
-            //   for each edge in polygon do // re-triangulate the polygonal hole
-            foreach (Triangle triangle in polygon)
-            {
-                //      newTri:= form a triangle from edge to point
-                //     add newTri to triangulation
-                Triangulation.Add(new Tetrahedron(
-                        measurement,
-                        triangle.Corners[0],
-                        triangle.Corners[1],
-                        triangle.Corners[2]));
-            }
-        }
+        AddAll(measurements);
         //for each triangle in triangulation // done inserting points, now clean up
-        //   if triangle contains a vertex from original super-triangle
-        //      remove triangle from triangulation
+        //foreach (Tetrahedron tetrahedron in Triangulation)
+        //{
+        //    //   if triangle contains a vertex from original super-triangle
+        //    if (tetrahedron.IsArtificial)
+        //    {
+        //        //      remove triangle from triangulation
+        //        Triangulation.Remove(tetrahedron);
+        //    }
+        //}
         //return triangulation
-
     }
 
-    public bool EdgeInBadTriangles(IEnumerable<Tetrahedron> tetrahedrons, Triangle edge)
+    public bool EdgeInBadTriangles(IEnumerable<Tetrahedron> tetrahedrons, Triangle triangle)
     {
         //                  if edge is not shared by any other triangles in badTriangles
         foreach (Tetrahedron otherTetrahedron in tetrahedrons)
         {
-            if (otherTetrahedron.Edges.Contains(edge))
+            foreach(Triangle otherTriangle in otherTetrahedron.Triangles)
             {
-                return true;
+                if (otherTriangle.Equals(triangle))
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public Tetrahedron SuperTetrahedron
+    public override void AddAll(List<Measurement3D> measurements)
     {
-        get
+        foreach (Measurement3D measurement in measurements)
         {
-            return new Tetrahedron(
-                new Measurement3D(new Location(0, 0, 0, -10)),
-                new Measurement3D(new Location(0, -100, -100, 100)),
-                new Measurement3D(new Location(0, 100, -100, 100)),
-                new Measurement3D(new Location(0, 0, 100, 100))
-                );
+            Add(measurement);
         }
     }
 }

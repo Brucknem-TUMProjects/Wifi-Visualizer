@@ -143,9 +143,9 @@ public class TrackerConnector : ITrackerConnector
 
 
     override
-    public Signal RequestServer(long timestamp)
+    public Signal RequestServer()
     {
-        return ParseResponse(timestamp, RequestServer("Yeet me dbsssss"));
+        return ParseResponse(RequestServer("Yeet me dbsssss"));
 
     }
 

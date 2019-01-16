@@ -1,70 +1,76 @@
-﻿using System.Collections;
+﻿using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
-using HullDelaunayVoronoi.Delaunay;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
+using System.Linq;
 
-public class DelaunayTriangulator : MonoBehaviour{
-
-    public MonoTetrahedron tetrahedronPrefab;
-    public MonoMeasurement3D measurementPrefab;
+public class DelaunayTriangulator : MonoBehaviour
+{
     private IDelaunayTriangulation triangulation;
-    private IDBConnector database;
 
-    void Start()
+    static DelaunayTriangulator mInstance;
+
+    public static DelaunayTriangulator Instance
     {
-        if(SceneManager.GetActiveScene().name != "Capture")
+        get
         {
-            Debug.Log("Start");
-            database = new DBConnectorMock();
-            database.ConnectDatabase("/Database/database.db");
-            Initialize(database);
+            if (mInstance == null)
+            {
+                GameObject go = new GameObject();
+                mInstance = go.AddComponent<DelaunayTriangulator>();
+                mInstance.Reset();
+            }
+            return mInstance;
         }
     }
 
-    private void SetDatabase(IDBConnector dBConnector)
+    public void Reset()
     {
-        database = dBConnector;
-    }
-
-    public void Initialize(IDBConnector dBConnector)
-    {
-        SetDatabase(dBConnector);
-        Recalculate();
-    }
-
-    public void Recalculate()
-    {
-        Debug.Log(database.Measurements.Count);
         triangulation = new DelaunayTriangulation();
-        triangulation.Generate(database.Measurements);
-        //GameObject spinner = new GameObject("Spinner");
-        //spinner.transform.position = new Vector3(triangulation.Centroid.x, triangulation.Centroid.y, triangulation.Centroid.z);
-        //transform.parent = spinner.transform;
-        //spinner.AddComponent<Spin>();
+    }
+
+    public void Add(Measurement3D measurement)
+    {
+        triangulation.Add(measurement);
+        Render();
+    }
+
+    public void AddAll(List<Measurement3D> measurements)
+    {
+        triangulation.AddAll(measurements);
+        Render();
+    }
+
+    public void Generate(List<Measurement3D> measurements)
+    {
+        triangulation.Generate(measurements);
         Render();
     }
 
     private void Render()
     {
-        for(int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            Destroy(transform.GetChild(0));
+            Debug.Log(transform.childCount);
+            Destroy(transform.GetChild(i).gameObject);
         }
 
-        Debug.Log("Creating tetras");
-        foreach(Tetrahedron tetrahedron in triangulation.Triangulation)
+        foreach (Tetrahedron tetrahedron in triangulation.Triangulation)
         {
-            MonoTetrahedron monoTetrahedron = Instantiate(tetrahedronPrefab);
-            monoTetrahedron.Initialize(tetrahedron);
-            monoTetrahedron.transform.parent = transform;
+            GameObject obj = new GameObject("Tetrahedron");
+            obj.AddComponent<MonoTetrahedron>().Initialize(tetrahedron);
+            obj.transform.parent = transform;
         }
 
-        foreach (Measurement3D vertex in triangulation.Measurements)
+        float size = triangulation.AverageDistance * 0.1f;
+        foreach (Measurement3D measurement in triangulation.Measurements)
         {
-            MonoMeasurement3D obj = Instantiate(measurementPrefab, vertex.Location, Quaternion.identity, transform);
-            obj.transform.localScale = Vector3.one * 0.5f;
-            obj.Initialize(vertex);
+            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            obj.AddComponent<MonoMeasurement3D>().Initialize(measurement,size);
+            obj.transform.parent = transform;
         }
     }
+
+    
 }

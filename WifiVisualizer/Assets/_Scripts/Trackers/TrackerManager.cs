@@ -19,7 +19,7 @@ public class TrackerManager : MonoBehaviour {
 
     private Dictionary<int, TrackerPolling> connectedTrackers;
     private Dictionary<int, RectTransform> connectedTrackerViews;
-    private IDBConnector database;
+
 
     Queue<Action> actions = new Queue<Action>();
 
@@ -29,11 +29,6 @@ public class TrackerManager : MonoBehaviour {
     {
         connectedTrackers = new Dictionary<int, TrackerPolling>();
         connectedTrackerViews = new Dictionary<int, RectTransform>();
-        database = new DBConnector();
-        database.ConnectDatabase("/Database/database.db");
-        database.ClearTables();
-
-        triangulator.Initialize(database);
 
         connect.onClick.AddListener(CreateTracker);
     }
@@ -69,8 +64,7 @@ public class TrackerManager : MonoBehaviour {
         RectTransform trackerView = Instantiate(trackerViewPrefab);
 
         trackerTarget.gameObject.SetActive(true);
-        trackerTarget.Setup(host, port, id, database, triangulator,
-            ConnectionSuccessful, Remove);
+        trackerTarget.Setup(host, port, id, ConnectionSuccessful, Remove);
         connectedTrackers.Add(id, trackerTarget);
 
         trackerView.SetParent(listView);
@@ -132,6 +126,6 @@ public class TrackerManager : MonoBehaviour {
     
     private void OnApplicationQuit()
     {
-        database.CloseConnection();
+        //database.CloseConnection();
     }
 }

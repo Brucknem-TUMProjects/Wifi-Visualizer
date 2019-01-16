@@ -1,4 +1,4 @@
-﻿Shader "Custom/FadeOutBillboard"
+﻿Shader "Custom/Measurement"
 {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
@@ -6,8 +6,12 @@
 		_Falloff("Falloff", Range(0,3)) = 1
 	}
 	SubShader {
-		Tags { "Queue"="Geometry" }
-		
+		Tags { "Queue"="Transparent" "RenderType" = "Transparent" }
+			
+		Blend SrcAlpha OneMinusSrcAlpha
+		//ZWrite off
+		Cull front
+
 		CGPROGRAM
 		#pragma surface surf Lambert alpha:fade
 

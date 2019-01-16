@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23292599469655898}
   - component: {fileID: 114650368073444348}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: CircumSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
