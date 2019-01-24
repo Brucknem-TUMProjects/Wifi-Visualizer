@@ -25,20 +25,21 @@ public class Measurement3D
             value -= MIN_DB;
             value *= -1;
 
-            float r = 0f;
-            float g = 255f;
+            float r = value / Delta;
+            float g = 1 - r;
 
-            if (value <= Delta / 2)
+            if(r > g)
             {
-                r = value / 25f * 255f;
+                g /= r;
+                r = 1;
             }
             else
             {
-                r = 255f;
-                g = 255f - ((value / 25f) * 255f);
+                r /= g;
+                g = 1;
             }
 
-            return new Color(r / 255f, g / 255f, 0, 1);
+            return new Color(r, g, 0, 1);
         }
     }
 
@@ -63,7 +64,7 @@ public class Measurement3D
         get
         {
             float tmp = (float)-(Decibel - MIN_DB);
-            return ((MAX_TRANSPARENCY - MIN_TRANSPARENCY) / (Delta * Delta)) * (tmp * tmp) + MIN_TRANSPARENCY;
+            return ((MAX_TRANSPARENCY - MIN_TRANSPARENCY) / Mathf.Pow(Delta, EXPONENT)) * Mathf.Pow(tmp, EXPONENT) + MIN_TRANSPARENCY;
         }
     }
 

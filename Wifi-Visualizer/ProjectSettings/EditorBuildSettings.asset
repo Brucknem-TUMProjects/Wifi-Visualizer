@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/Planetarium.unity
-    guid: 3ed81a20afc4b1a438dea17ad89878cc
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/Delaunay.unity
-    guid: 2bf38220f1d23194cb210478e7f84c0f
+    path: Assets/Scenes/Main.unity
+    guid: db04fed7be7d3434aad353dce67500d2
