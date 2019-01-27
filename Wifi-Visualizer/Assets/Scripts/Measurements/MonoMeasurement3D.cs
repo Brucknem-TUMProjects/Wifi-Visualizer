@@ -7,6 +7,9 @@ public class MonoMeasurement3D : MonoBehaviour {
     private bool initialized = false;
     private MeshRenderer rend;
 
+    public double decibel;
+    public float transparency;
+
     public void SetMeasurement(Measurement3D measurement)
     {
         if (!initialized)
@@ -16,6 +19,8 @@ public class MonoMeasurement3D : MonoBehaviour {
         Measurement = measurement;        
         transform.position = measurement;
         rend.material.color = measurement.Color;
+        decibel = measurement.Decibel;
+        transparency = measurement.Transparency;
         //rend.material.SetFloat("_Falloff", measurement.Falloff);
         rend.material.SetFloat("_Transparency", measurement.Transparency);
     }

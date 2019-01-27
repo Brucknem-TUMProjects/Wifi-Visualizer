@@ -8,10 +8,18 @@ public class UIAddRandom : MonoBehaviour {
     [Range(-80,-20)]
     public int decibel;
 
-    private int i = 0;
-
-	public void AddRandom()
+    public Vector3 position;
+    
+    private void Start()
     {
-        placer.Add(new Measurement3D(Vector3.one * i++, "","", decibel));
+        for(int i = -80; i <= -20; i++)
+        {
+            placer.Add(new Measurement3D((Vector3.right * i) / 4, "", "", i));
+        }
+    }
+
+    public void AddRandom()
+    {
+        placer.Add(new Measurement3D(position, "","", decibel));
     }
 }

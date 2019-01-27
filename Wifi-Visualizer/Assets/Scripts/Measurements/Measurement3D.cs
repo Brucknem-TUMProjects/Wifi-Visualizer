@@ -13,22 +13,18 @@ public class Measurement3D
 
     private static readonly float MIN_DB = -20;
     private static readonly float MAX_DB = -80;
-    private static readonly float MIN_TRANSPARENCY = 0.3f;
-    private static readonly float MAX_TRANSPARENCY = 1.0f;
+    private static readonly float MIN_TRANSPARENCY = 0.2f;
+    private static readonly float MAX_TRANSPARENCY = 1.2f;
     private static readonly int EXPONENT = 4;
 
     public Color Color
     {
         get
         {
-            float value = Mathf.Clamp((float)Decibel, MAX_DB, MIN_DB);
-            value -= MIN_DB;
-            value *= -1;
-
-            float r = value / Delta;
+            float r = Normalized;
             float g = 1 - r;
 
-            if(r > g)
+            if (r > g)
             {
                 g /= r;
                 r = 1;
@@ -43,19 +39,11 @@ public class Measurement3D
         }
     }
 
-    public float Falloff
-    {
-        get
-        {
-            return Normalized * 18 + 2;
-        }
-    }
-
     private float Normalized
     {
         get
         {
-            return (float)(Decibel + MIN_DB) / (MAX_DB - MIN_DB);
+            return -(Mathf.Clamp((float)Decibel, MAX_DB, MIN_DB) - MIN_DB) / Delta;
         }
     }
     
@@ -63,12 +51,13 @@ public class Measurement3D
     {
         get
         {
-            float tmp = (float)-(Decibel - MIN_DB);
-            return ((MAX_TRANSPARENCY - MIN_TRANSPARENCY) / Mathf.Pow(Delta, EXPONENT)) * Mathf.Pow(tmp, EXPONENT) + MIN_TRANSPARENCY;
+            float t = Normalized;
+            float a = MAX_TRANSPARENCY - MIN_TRANSPARENCY;
+            return a * Mathf.Pow(t, EXPONENT) + MIN_TRANSPARENCY;
         }
     }
 
-    public float Delta
+    private float Delta
     {
         get
         {
