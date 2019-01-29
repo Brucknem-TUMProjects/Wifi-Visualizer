@@ -26,7 +26,7 @@ public class CaptureRoute : MonoBehaviour {
         if (marker.IsTracked)
         {
             Measurement3D measurement = new Measurement3D(marker.Position, request.Args["ssid"], request.Args["mac"], int.Parse(request.Args["db"]));
-            measurementPlacer.Add(measurement);
+            measurementPlacer.Add(measurement, request.Args["auto"].Equals("1"));
             text.text = measurement.ToString();
         }
     }

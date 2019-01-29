@@ -6,7 +6,8 @@ using System.Linq;
 public class MeasurementPlacer : MonoBehaviour {
 
 	//public List<Vector3> Positions { get; private set; }
-    public List<MonoMeasurement3D> Measurements { get; private set; }
+    private List<MonoMeasurement3D> Measurements { get; set; }
+    public MonoMeasurement3D prefab;
 
     private readonly float MIN_DISTANCE = 0.25f;
 
@@ -16,11 +17,33 @@ public class MeasurementPlacer : MonoBehaviour {
         Measurements = new List<MonoMeasurement3D>();
     }
 
-    public bool Add(Measurement3D measurement)
+    public bool Add(Measurement3D measurement, bool auto=false)
     {
-        RemoveOveridden(measurement);
+        if (!auto)
+        {
+            RemoveOveridden(measurement);
+        }
+        else
+        {
+            if (HasNear(measurement))
+            {
+                return false;
+            }
+        }
         AddMono(measurement);
         return true;
+    }
+
+    public bool HasNear(Measurement3D measurement)
+    {
+        for (int i = Measurements.Count - 1; i >= 0; i--)
+        {
+            if(Vector3.Distance(measurement, Measurements[i].Measurement) < MIN_DISTANCE)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void RemoveOveridden(Measurement3D measurement)
@@ -39,26 +62,14 @@ public class MeasurementPlacer : MonoBehaviour {
             Measurements.Remove(Measurements[i]);
         }
     }
-
-    //public bool HasNear(Measurement3D measurement)
-    //{
-    //    foreach(Vector3 position in Positions)
-    //    {
-    //        if(Vector3.Distance(position, measurement) < MIN_DISTANCE)
-    //        {
-    //            return true;
-    //        }
-    //    }
-    //    return false;
-    //}
-
+    
     private void AddMono(Measurement3D measurement)
     {
-        GameObject obj = new GameObject("Measurement " + Measurements.Count);
-        MonoMeasurement3D mono = (obj.AddComponent<MonoMeasurement3D>());
+        MonoMeasurement3D mono = Instantiate(prefab);
+        mono.name = "Measurement " + Measurements.Count;
         mono.SetMeasurement(measurement);
         mono.SetSize(MIN_DISTANCE * 2);
-        obj.transform.parent = transform;
+        mono.gameObject.transform.parent = transform;
         Measurements.Add(mono);
     }
 }

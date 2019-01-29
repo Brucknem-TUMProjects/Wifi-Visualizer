@@ -27,11 +27,7 @@ public class MonoMeasurement3D : MonoBehaviour {
 
     private void Initialize()
     {
-        GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        gameObject.AddComponent<MeshFilter>().mesh = quad.GetComponent<MeshFilter>().mesh;
-        Destroy(quad);
-
-        rend = gameObject.AddComponent<MeshRenderer>();
+        rend = gameObject.GetComponent<MeshRenderer>();
         rend.material = new Material(Shader.Find("Custom/SphereSurf"));
         initialized = true;
     }
