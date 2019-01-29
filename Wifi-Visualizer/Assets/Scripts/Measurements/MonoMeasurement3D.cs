@@ -22,18 +22,25 @@ public class MonoMeasurement3D : MonoBehaviour {
         decibel = measurement.Decibel;
         transparency = measurement.Transparency;
         //rend.material.SetFloat("_Falloff", measurement.Falloff);
-        rend.material.SetFloat("_Transparency", measurement.Transparency);
+        rend.material.SetFloat("_Transparency", measurement.Transparency * 5);
+        rend.material.SetVector("_Position", measurement);
     }
 
     private void Initialize()
     {
         rend = gameObject.GetComponent<MeshRenderer>();
-        rend.material = new Material(Shader.Find("Custom/SphereSurf"));
+        rend.material = new Material(Shader.Find("Custom/FadeOutBillboard"));
         initialized = true;
     }
     
     public void SetSize(float radius)
     {
         transform.localScale = Vector3.one * radius;
+        rend.material.SetFloat("_Size", radius / 2);
+    }
+
+    private void Update()
+    {
+        transform.LookAt(Camera.main.transform);
     }
 }

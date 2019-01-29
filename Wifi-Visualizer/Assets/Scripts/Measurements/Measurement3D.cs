@@ -5,6 +5,7 @@ public class Measurement3D
     public string Id { get; private set; }
 
     public Vector3 Position { get; private set; }
+    public Vector4 Position4 { get; private set; }
     public string SSID { get; private set; }
     public string MAC { get; private set; }
     public double Decibel { get; private set; }
@@ -68,6 +69,7 @@ public class Measurement3D
     public Measurement3D(Vector3 position, string ssid = "", string mac = "", double decibel = -80)
     {
         Position = position;
+        Position4 = new Vector4(position.x, position.y, position.z, 1);
         SSID = ssid;
         MAC = mac;
         Decibel = decibel;
@@ -77,6 +79,11 @@ public class Measurement3D
     public static implicit operator Vector3(Measurement3D measurement)
     {
         return measurement.Position;
+    }
+
+    public static implicit operator Vector4(Measurement3D measurement)
+    {
+        return measurement.Position4;
     }
 
     public static implicit operator float[] (Measurement3D measurement)
