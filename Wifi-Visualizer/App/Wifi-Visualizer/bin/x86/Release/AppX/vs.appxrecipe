@@ -30,13 +30,13 @@
     <AppXManifest Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\bin\x86\Release\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2019-01-28T10:35:02.203</Modified>
+      <Modified>2019-02-08T10:40:27.305</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\bin\x86\Release\Wifi-Visualizer.exe">
       <PackagePath>entrypoint\Wifi-Visualizer.exe</PackagePath>
-      <Modified>2019-01-28T10:34:47.447</Modified>
+      <Modified>2019-02-08T10:40:13.512</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\.nuget\packages\microsoft.applicationinsights\1.0.0\lib\portable-win81+wpa81\Microsoft.ApplicationInsights.dll">
       <PackagePath>Microsoft.ApplicationInsights.dll</PackagePath>
@@ -500,7 +500,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Resource.res">
       <PackagePath>Resource.res</PackagePath>
-      <Modified>2019-01-28T10:33:40.499</Modified>
+      <Modified>2019-02-08T10:39:23.591</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
@@ -550,15 +550,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\boot.config">
       <PackagePath>Data\boot.config</PackagePath>
-      <Modified>2019-01-28T10:32:46.796</Modified>
+      <Modified>2019-02-08T10:38:31.179</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\globalgamemanagers">
       <PackagePath>Data\globalgamemanagers</PackagePath>
-      <Modified>2019-01-28T10:32:40.698</Modified>
+      <Modified>2019-02-08T10:38:30.413</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\level0">
       <PackagePath>Data\level0</PackagePath>
-      <Modified>2019-01-28T10:32:39.423</Modified>
+      <Modified>2019-02-08T10:38:29.274</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\Resources\unity default resources">
       <PackagePath>Data\Resources\unity default resources</PackagePath>
@@ -566,39 +566,39 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\Resources\unity_builtin_extra">
       <PackagePath>Data\Resources\unity_builtin_extra</PackagePath>
-      <Modified>2019-01-28T10:32:46.793</Modified>
+      <Modified>2019-02-08T10:38:31.175</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\globalgamemanagers.assets">
       <PackagePath>Data\globalgamemanagers.assets</PackagePath>
-      <Modified>2019-01-28T10:32:40.850</Modified>
+      <Modified>2019-02-08T10:38:30.560</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\resources.assets">
       <PackagePath>Data\resources.assets</PackagePath>
-      <Modified>2019-01-28T10:32:41.726</Modified>
+      <Modified>2019-02-08T10:38:30.621</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\sharedassets0.assets">
       <PackagePath>Data\sharedassets0.assets</PackagePath>
-      <Modified>2019-01-28T10:32:42.392</Modified>
+      <Modified>2019-02-08T10:38:30.731</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\level0.resS">
       <PackagePath>Data\level0.resS</PackagePath>
-      <Modified>2019-01-28T10:32:39.419</Modified>
+      <Modified>2019-02-08T10:38:29.269</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\resources.assets.resS">
       <PackagePath>Data\resources.assets.resS</PackagePath>
-      <Modified>2019-01-28T10:32:41.721</Modified>
+      <Modified>2019-02-08T10:38:30.617</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\sharedassets0.assets.resS">
       <PackagePath>Data\sharedassets0.assets.resS</PackagePath>
-      <Modified>2019-01-28T10:32:42.387</Modified>
+      <Modified>2019-02-08T10:38:30.727</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\managedAssemblies.txt">
       <PackagePath>Data\managedAssemblies.txt</PackagePath>
-      <Modified>2019-01-28T10:33:40.376</Modified>
+      <Modified>2019-02-08T10:39:23.511</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\nativePlugins.txt">
       <PackagePath>Data\nativePlugins.txt</PackagePath>
-      <Modified>2019-01-28T10:33:40.382</Modified>
+      <Modified>2019-02-08T10:39:23.514</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Data\StreamingAssets\Vuforia\WifiVisualizer.dat">
       <PackagePath>Data\StreamingAssets\Vuforia\WifiVisualizer.dat</PackagePath>
@@ -614,207 +614,207 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.TilemapModule.dll">
       <PackagePath>UnityEngine.TilemapModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.454</Modified>
+      <Modified>2019-02-08T10:40:24.896</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UNETModule.dll">
       <PackagePath>UnityEngine.UNETModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.492</Modified>
+      <Modified>2019-02-08T10:40:24.931</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UIModule.dll">
       <PackagePath>UnityEngine.UIModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.520</Modified>
+      <Modified>2019-02-08T10:40:24.957</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UIElementsModule.dll">
       <PackagePath>UnityEngine.UIElementsModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.596</Modified>
+      <Modified>2019-02-08T10:40:25.027</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.StyleSheetsModule.dll">
       <PackagePath>UnityEngine.StyleSheetsModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.623</Modified>
+      <Modified>2019-02-08T10:40:25.051</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.SpriteMaskModule.dll">
       <PackagePath>UnityEngine.SpriteMaskModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.644</Modified>
+      <Modified>2019-02-08T10:40:25.069</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.ScreenCaptureModule.dll">
       <PackagePath>UnityEngine.ScreenCaptureModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.663</Modified>
+      <Modified>2019-02-08T10:40:25.087</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.TextRenderingModule.dll">
       <PackagePath>UnityEngine.TextRenderingModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.688</Modified>
+      <Modified>2019-02-08T10:40:25.112</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.TerrainPhysicsModule.dll">
       <PackagePath>UnityEngine.TerrainPhysicsModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.707</Modified>
+      <Modified>2019-02-08T10:40:25.129</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.TerrainModule.dll">
       <PackagePath>UnityEngine.TerrainModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.734</Modified>
+      <Modified>2019-02-08T10:40:25.164</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UnityAnalyticsModule.dll">
       <PackagePath>UnityEngine.UnityAnalyticsModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.758</Modified>
+      <Modified>2019-02-08T10:40:25.188</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.WebModule.dll">
       <PackagePath>UnityEngine.WebModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.785</Modified>
+      <Modified>2019-02-08T10:40:25.213</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.VRModule.dll">
       <PackagePath>UnityEngine.VRModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.823</Modified>
+      <Modified>2019-02-08T10:40:25.249</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.VideoModule.dll">
       <PackagePath>UnityEngine.VideoModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.847</Modified>
+      <Modified>2019-02-08T10:40:25.272</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.WindModule.dll">
       <PackagePath>UnityEngine.WindModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.868</Modified>
+      <Modified>2019-02-08T10:40:25.289</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UnityWebRequestModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.899</Modified>
+      <Modified>2019-02-08T10:40:25.316</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UnityWebRequestAudioModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestAudioModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.920</Modified>
+      <Modified>2019-02-08T10:40:25.335</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UnityConnectModule.dll">
       <PackagePath>UnityEngine.UnityConnectModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.941</Modified>
+      <Modified>2019-02-08T10:40:25.354</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.VehiclesModule.dll">
       <PackagePath>UnityEngine.VehiclesModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.961</Modified>
+      <Modified>2019-02-08T10:40:25.372</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UnityWebRequestWWWModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestWWWModule.dll</PackagePath>
-      <Modified>2019-01-28T10:34:59.985</Modified>
+      <Modified>2019-02-08T10:40:25.394</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UnityWebRequestTextureModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestTextureModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.012</Modified>
+      <Modified>2019-02-08T10:40:25.415</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.PhysicsModule.dll">
       <PackagePath>UnityEngine.PhysicsModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.046</Modified>
+      <Modified>2019-02-08T10:40:25.443</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.ClothModule.dll">
       <PackagePath>UnityEngine.ClothModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.067</Modified>
+      <Modified>2019-02-08T10:40:25.466</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.AudioModule.dll">
       <PackagePath>UnityEngine.AudioModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.099</Modified>
+      <Modified>2019-02-08T10:40:25.495</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.ARModule.dll">
       <PackagePath>UnityEngine.ARModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.127</Modified>
+      <Modified>2019-02-08T10:40:25.519</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.DirectorModule.dll">
       <PackagePath>UnityEngine.DirectorModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.147</Modified>
+      <Modified>2019-02-08T10:40:25.539</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.CrashReportingModule.dll">
       <PackagePath>UnityEngine.CrashReportingModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.172</Modified>
+      <Modified>2019-02-08T10:40:25.557</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.CoreModule.dll">
       <PackagePath>UnityEngine.CoreModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.506</Modified>
+      <Modified>2019-02-08T10:40:25.883</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.AccessibilityModule.dll">
       <PackagePath>UnityEngine.AccessibilityModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.530</Modified>
+      <Modified>2019-02-08T10:40:25.903</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Assembly-CSharp.dll">
       <PackagePath>Assembly-CSharp.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.588</Modified>
+      <Modified>2019-02-08T10:40:25.952</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.AnimationModule.dll">
       <PackagePath>UnityEngine.AnimationModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.625</Modified>
+      <Modified>2019-02-08T10:40:25.989</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.AIModule.dll">
       <PackagePath>UnityEngine.AIModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.655</Modified>
+      <Modified>2019-02-08T10:40:26.013</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.dll">
       <PackagePath>UnityEngine.dll</PackagePath>
-      <Modified>2019-01-28T10:33:12.389</Modified>
+      <Modified>2019-02-08T10:38:56.357</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.ParticlesLegacyModule.dll">
       <PackagePath>UnityEngine.ParticlesLegacyModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.688</Modified>
+      <Modified>2019-02-08T10:40:26.037</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.JSONSerializeModule.dll">
       <PackagePath>UnityEngine.JSONSerializeModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.714</Modified>
+      <Modified>2019-02-08T10:40:26.055</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.Physics2DModule.dll">
       <PackagePath>UnityEngine.Physics2DModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.758</Modified>
+      <Modified>2019-02-08T10:40:26.086</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.PerformanceReportingModule.dll">
       <PackagePath>UnityEngine.PerformanceReportingModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.782</Modified>
+      <Modified>2019-02-08T10:40:26.104</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.ParticleSystemModule.dll">
       <PackagePath>UnityEngine.ParticleSystemModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.823</Modified>
+      <Modified>2019-02-08T10:40:26.141</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.GridModule.dll">
       <PackagePath>UnityEngine.GridModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.848</Modified>
+      <Modified>2019-02-08T10:40:26.159</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.GameCenterModule.dll">
       <PackagePath>UnityEngine.GameCenterModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.880</Modified>
+      <Modified>2019-02-08T10:40:26.186</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.InputModule.dll">
       <PackagePath>UnityEngine.InputModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.905</Modified>
+      <Modified>2019-02-08T10:40:26.206</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.IMGUIModule.dll">
       <PackagePath>UnityEngine.IMGUIModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.951</Modified>
+      <Modified>2019-02-08T10:40:26.253</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.ImageConversionModule.dll">
       <PackagePath>UnityEngine.ImageConversionModule.dll</PackagePath>
-      <Modified>2019-01-28T10:35:00.977</Modified>
+      <Modified>2019-02-08T10:40:26.271</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.Timeline.dll">
       <PackagePath>UnityEngine.Timeline.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.045</Modified>
+      <Modified>2019-02-08T10:40:26.336</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\nunit.framework.dll">
       <PackagePath>nunit.framework.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.112</Modified>
+      <Modified>2019-02-08T10:40:26.395</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.UI.dll">
       <PackagePath>UnityEngine.UI.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.223</Modified>
+      <Modified>2019-02-08T10:40:26.503</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.Analytics.dll">
       <PackagePath>UnityEngine.Analytics.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.251</Modified>
+      <Modified>2019-02-08T10:40:26.525</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.HoloLens.dll">
       <PackagePath>UnityEngine.HoloLens.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.290</Modified>
+      <Modified>2019-02-08T10:40:26.560</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\Vuforia.UnityExtensions.dll">
       <PackagePath>Vuforia.UnityExtensions.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.386</Modified>
+      <Modified>2019-02-08T10:40:26.649</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\UnityEngine.Networking.dll">
       <PackagePath>UnityEngine.Networking.dll</PackagePath>
-      <Modified>2019-01-28T10:35:01.483</Modified>
+      <Modified>2019-02-08T10:40:26.738</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ga58lum\Documents\Wifi-Visualizer\Wifi-Visualizer\App\Wifi-Visualizer\bin\x86\Release\Core\Wifi-Visualizer.exe">
       <PackagePath>Wifi-Visualizer.exe</PackagePath>
-      <Modified>2019-01-28T10:35:02.196</Modified>
+      <Modified>2019-02-08T10:40:27.295</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

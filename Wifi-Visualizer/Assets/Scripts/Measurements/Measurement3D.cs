@@ -13,9 +13,9 @@ public class Measurement3D
     public float[] PositionArray { get { return new float[] { Position.x, Position.y, Position.z }; } }
 
     private static readonly float MIN_DB = -20;
-    private static readonly float MAX_DB = -80;
-    private static readonly float MIN_TRANSPARENCY = 0.2f;
-    private static readonly float MAX_TRANSPARENCY = 1.2f;
+    private static readonly float MAX_DB = -70;
+    private static readonly float MIN_TRANSPARENCY = 0.5f;
+    private static readonly float MAX_TRANSPARENCY = 1.5f;
     private static readonly int EXPONENT = 4;
 
     public Color Color
