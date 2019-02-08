@@ -14,7 +14,8 @@ public class Handy : MonoBehaviour
     public Text mac;
     public Text ssid;
     public Text db;
-    
+
+
     private IWifiInfo wifiInfo;
 
     private void Start()
